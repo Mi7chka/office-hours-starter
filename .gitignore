@@ -2,3 +2,5 @@
 __pycache__/
 *.pyc
 dist/
+# names that must never be published; the word check reads this file on this computer only
+tools/private-words.txt

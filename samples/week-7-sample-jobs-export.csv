@@ -1,0 +1,32 @@
+"SAMPLE DATA. Made-up October jobs for a made-up company (Greenline Landscaping). No real people. Wednesday Office Hours, Session 7."
+Date,Customer,Service,Town,Amount (USD),Paid,How they found us
+2026-10-01,Teresa Alvarez,Lawn care,Fairview,95,Yes,Repeat customer
+2026-10-01,Harold Benton,Fall cleanup,Brookfield,420,Yes,Referral
+2026-10-02,Sam Keller,Lawn care,Riverton,125,Yes,Google search
+2026-10-05,Nadia Hossain,Mulch and planting,Oak Hollow,860,Yes,Website form
+10/6/2026,Gordon Pike,Hedge trimming,Fairview,280,Yes,Yard sign
+10/6/2026,Elena Marchetti,Fall cleanup,Riverton,510,No,Referral
+2026-10-07,Howard Ellison,Patio and hardscape,Riverton,5200,Yes,Referral
+2026-10-08,Priya Raman,Lawn care,Brookfield,110,Yes,Repeat customer
+2026-10-09,Dana Whitfield,Hedge trimming,Brookfield,385,Yes,Referral
+2026-10-09,Dana Whitfield,Hedge trimming,Brookfield,385,Yes,Referral
+2026-10-12,Walt Jennings,Lawn care,Oak Hollow,140,Yes,Repeat customer
+2026-10-12,Ben Thackeray,Mulch and planting,Brookfield,1240,Yes,Referral
+10/13/2026,Joanne Fitch,Fall cleanup,Oak Hollow,465,Yes,Google search
+10/14/2026,Irene Castillo,Hedge trimming,Riverton,310,Yes,Repeat customer
+2026-10-15,Teresa Alvarez,Lawn care,Fairview,95,Yes,Repeat customer
+2026-10-15,Sofia Lindqvist,Mulch and planting,Fairview,725,Yes,Referral
+2026-10-16,Sam Keller,Lawn care,Riverton,125,Yes,Google search
+2026-10-19,Dev Kapoor,Fall cleanup,Fairview,390,Yes,Website form
+10/20/2026,Carla Mendes,Lawn care,Fairview,95,Yes,Yard sign
+10/20/2026,Andre Baptiste,Mulch and planting,Riverton,980,No,Google search
+2026-10-21,Ruth Abernathy,Fall cleanup,Brookfield,,No,Referral
+2026-10-22,P. Raman,Lawn care,Brookfield,110,Yes,Repeat customer
+2026-10-23,Marcus Oyelaran,Patio and hardscape,Oak Hollow,6400,No,Website form
+2026-10-26,Walt Jennings,Lawn care,Oak Hollow,140,Yes,Repeat customer
+2026-10-26,Grace Whitlock,Mulch and planting,Brookfield,1150,Yes,Repeat customer
+10/27/2026,Tom Oduya,Fall cleanup,Riverton,540,No,Google search
+10/28/2026,Paul Nakamura,Hedge trimming,Oak Hollow,345,No,Google search
+2026-10-29,Teresa Alvarez,Lawn care,Fairview,95,Yes,Repeat customer
+2026-10-29,Janet Osei,Patio and hardscape,Fairview,4850,Yes,Referral
+2026-10-30,Lillian Voss,Fall cleanup,Oak Hollow,475,Yes,Repeat customer

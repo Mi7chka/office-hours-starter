@@ -1,0 +1,5 @@
+Who does [what you sell] in [your town], and what do you know about [your business name]?
+
+Paste that into ChatGPT, Claude, Gemini or Copilot, with your own words in the brackets.
+Do not ask whether the answer is right. Ask which one is wrong: the hours, the phone, the services, the town.
+You cannot edit the assistant. Find the page or the listing it read, fix that, and check again in a few weeks.

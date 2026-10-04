@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lawn care and patios in Cedar Hollow | Greenline Landscaping</title>
+<!--
+  SAMPLE DATA. A made-up home page for a made-up company (Greenline Landscaping, in the made-up
+  town of Cedar Hollow). No real people, no real address, no real phone number. The star rating,
+  the review count and the review are made up too.
+  Used in Wednesday Office Hours, Session 3. This is the AFTER page: a headline that says what,
+  for whom and where, one line of proof, one button, and the phone number at the top.
+
+  Self-contained: plain HTML and CSS, no script, no external files. Open it in any browser.
+  The dark frame is one phone screen. The form is a sample. It does not send anything.
+
+  PRESENTER:
+  1. The headline and the line under it are editable. Click the headline, select all, and paste
+     the one the room picked. Reload the page to get the original back.
+  2. "Run the three-second test" in the top banner covers the page. "Show the page" then shows
+     it for exactly three seconds and covers it again. What you pasted stays in place.
+-->
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #d9dcd6;
+    color: #1f2a22;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* The sample banner and the three-second test (CSS only). */
+  .state { position: fixed; top: 0; left: 0; width: 0; height: 0; }
+  .sample-banner {
+    position: relative;
+    width: 100%;
+    flex: 0 0 auto;
+    background: #1f1f1f;
+    color: #ffd666;
+    font: 600 13px/1.4 -apple-system, "Segoe UI", Arial, sans-serif;
+    letter-spacing: 0.04em;
+    text-align: center;
+    padding: 8px 12px 11px;
+  }
+  .sample-banner a { color: #ffffff; margin-left: 10px; white-space: nowrap; }
+  .timer {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 5px;
+    background: #ffd666;
+    transform-origin: left center;
+  }
+  .frame {
+    position: relative;
+    flex: 1 1 0;
+    min-height: 0;
+    max-height: 700px;
+    width: 100%;
+    max-width: 390px;
+    margin: 14px 0;
+  }
+  .cover {
+    display: none;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    bottom: 8px;
+    left: 8px;
+    border-radius: 22px;
+    background: #1f2a22;
+    color: #ffffff;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 26px;
+  }
+  .cover .kicker { font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ffd666; margin: 0 0 14px; }
+  .cover .big { font-size: 26px; font-weight: 800; line-height: 1.25; margin: 0 0 22px; }
+  .cover .ask { font-size: 21px; font-weight: 700; line-height: 1.3; margin: 0 0 12px; }
+  .cover .go {
+    display: inline-block;
+    margin-top: 14px;
+    background: #ffd666;
+    color: #1f2a22;
+    font-size: 18px;
+    font-weight: 800;
+    text-decoration: none;
+    border-radius: 12px;
+    padding: 14px 22px;
+  }
+  .cover .again { margin-top: 16px; font-size: 14px; color: #cfd8cf; }
+  #ready:target ~ .frame .cover-start { display: flex; }
+  #test:target ~ .frame .cover-end { display: flex; visibility: hidden; animation: timesup 0.01s linear 3s forwards; }
+  #test:target ~ .sample-banner .timer { display: block; animation: countdown 3s linear forwards; }
+  @keyframes timesup { to { visibility: visible; } }
+  @keyframes countdown { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+
+  /* The sample page itself. */
+  .phone {
+    height: 100%;
+    background: #ffffff;
+    border: 8px solid #2b2b2b;
+    border-radius: 30px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+  .first-screen {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .topbar {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 16px;
+    background: #ffffff;
+    border-bottom: 1px solid #e3e3e3;
+  }
+  .logo { font-size: 16px; font-weight: 700; color: #2f5d3a; line-height: 1.2; }
+  .call {
+    flex: 0 0 auto;
+    font-size: 15px;
+    font-weight: 700;
+    color: #2f5d3a;
+    text-decoration: none;
+    border: 2px solid #2f5d3a;
+    border-radius: 999px;
+    padding: 7px 12px;
+    white-space: nowrap;
+  }
+  .hero {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 22px 20px 24px;
+    color: #ffffff;
+    background:
+      linear-gradient(rgba(20, 45, 26, 0.72), rgba(20, 45, 26, 0.72)),
+      linear-gradient(160deg, #7fae7a 0%, #3f7a4a 45%, #24502e 100%);
+  }
+  .hero h1 {
+    font-size: 31px;
+    line-height: 1.15;
+    font-weight: 800;
+    margin: 0 0 12px;
+  }
+  .hero .sub {
+    font-size: 17px;
+    line-height: 1.45;
+    margin: 0 0 18px;
+    color: #f1f6ef;
+  }
+  /* The two editable lines: a soft outline while typing, and pasted formatting is stripped. */
+  [contenteditable] { outline: none; border-radius: 6px; cursor: text; -webkit-user-modify: read-write-plaintext-only; }
+  [contenteditable]:focus { box-shadow: 0 0 0 2px rgba(255, 214, 102, 0.9); }
+  [contenteditable] * { all: unset !important; }
+  .proof {
+    background: rgba(255, 255, 255, 0.14);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin: 0 0 20px;
+  }
+  .stars { color: #ffd666; font-size: 17px; line-height: 1.2; letter-spacing: 0.08em; }
+  .rating { font-size: 15px; font-weight: 700; margin-top: 2px; }
+  .proof blockquote {
+    margin: 8px 0 0;
+    font-size: 15px;
+    line-height: 1.45;
+    font-style: italic;
+  }
+  .proof cite { display: block; margin-top: 4px; font-size: 13px; font-style: normal; color: #dbe7d8; }
+  .button {
+    display: block;
+    text-align: center;
+    background: #ffd666;
+    color: #1f2a22;
+    font-size: 19px;
+    font-weight: 800;
+    text-decoration: none;
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .below { padding: 24px 20px 6px; }
+  .below h2 { font-size: 20px; margin: 0 0 12px; color: #2f5d3a; }
+  .below p { font-size: 15px; line-height: 1.55; margin: 0 0 22px; color: #3f4a42; }
+  .photos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 0 22px; }
+  .photo {
+    min-height: 96px;
+    border: 2px dashed #9db59f;
+    border-radius: 10px;
+    background: #eef4ec;
+    color: #4c6b52;
+    font-size: 12px;
+    line-height: 1.35;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8px;
+  }
+  .quote-form { background: #f4f7f2; border-radius: 14px; padding: 18px 16px; margin: 0 0 22px; }
+  .quote-form label { display: block; font-size: 14px; font-weight: 600; margin: 0 0 12px; color: #1f2a22; }
+  .quote-form input, .quote-form select {
+    display: block;
+    width: 100%;
+    margin-top: 5px;
+    font-size: 16px;
+    padding: 11px 10px;
+    border: 1px solid #b9c6ba;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #1f2a22;
+  }
+  .quote-form button {
+    width: 100%;
+    border: 0;
+    background: #2f5d3a;
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 800;
+    border-radius: 10px;
+    padding: 14px;
+    cursor: pointer;
+  }
+  .quote-form .note { font-size: 12px; font-weight: 400; color: #6b776d; margin: 10px 0 0; }
+  .footer {
+    padding: 16px 20px 24px;
+    background: #24502e;
+    color: #e6efe4;
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: center;
+  }
+  .footer a { color: #ffffff; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<span class="state" id="ready"></span>
+<span class="state" id="test"></span>
+
+<div class="sample-banner">
+  SAMPLE &middot; AFTER &middot; A made-up home page for a made-up company. The reviews are made up too.
+  <a href="#ready">Run the three-second test</a>
+  <div class="timer"></div>
+</div>
+
+<div class="frame">
+
+  <div class="phone">
+
+    <div class="first-screen">
+      <div class="topbar">
+        <div class="logo">Greenline Landscaping</div>
+        <a class="call" href="tel:5550100">Call 555-0100</a>
+      </div>
+      <div class="hero">
+        <h1 contenteditable="true" spellcheck="false">Lawn care and patios for Cedar Hollow homeowners</h1>
+        <p class="sub" contenteditable="true" spellcheck="false">Mowing, hedges and patios. Free site visit, written quote.</p>
+        <div class="proof">
+          <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <div class="rating">4.9 on Google from 132 reviews</div>
+          <blockquote>"Showed up on time, yard looks great, fair price."
+            <cite>Sam K., Cedar Hollow</cite>
+          </blockquote>
+        </div>
+        <a class="button" href="#quote">Get a free quote</a>
+      </div>
+    </div>
+
+    <div class="below">
+      <h2>Our work in Cedar Hollow</h2>
+      <div class="photos">
+        <div class="photo">Your own photo goes here: a finished patio</div>
+        <div class="photo">Your own photo goes here: a front lawn</div>
+        <div class="photo">Your own photo goes here: a trimmed hedge</div>
+        <div class="photo">Your own photo goes here: your crew</div>
+      </div>
+
+      <h2>Family owned since 2009</h2>
+      <p>Greenline Landscaping is a family business based in Cedar Hollow. We look after lawns, hedges and patios for homeowners here, and 132 of them have reviewed us on Google.</p>
+
+      <div class="quote-form" id="quote">
+        <h2>Get a free quote</h2>
+        <label>Your name
+          <input type="text" name="name" autocomplete="off">
+        </label>
+        <label>Email
+          <input type="email" name="email" autocomplete="off">
+        </label>
+        <label>Phone number
+          <input type="tel" name="phone" autocomplete="off">
+        </label>
+        <label>What do you need?
+          <select name="service">
+            <option>Lawn care</option>
+            <option>Hedge trimming</option>
+            <option>Paver patio</option>
+          </select>
+        </label>
+        <button type="button">Get a free quote</button>
+        <p class="note">Sample form. It does not send anything. On a real site this goes to your CRM, or at least to a spreadsheet.</p>
+      </div>
+    </div>
+
+    <div class="footer">
+      Greenline Landscaping &middot; Cedar Hollow<br>
+      <a href="tel:5550100">Call 555-0100</a>
+    </div>
+
+  </div>
+
+  <div class="cover cover-start">
+    <p class="kicker">The three-second test</p>
+    <p class="big">Same company, same facts. You get three seconds.</p>
+    <a class="go" href="#test">Show the page</a>
+  </div>
+
+  <div class="cover cover-end">
+    <p class="kicker">Time is up</p>
+    <p class="ask">What does this company do?</p>
+    <p class="ask">Who is it for?</p>
+    <p class="ask">What would you press?</p>
+    <a class="go" href="#page">Show the page again</a>
+    <a class="again" href="#ready">Run the test again</a>
+  </div>
+
+</div>
+
+</body>
+</html>

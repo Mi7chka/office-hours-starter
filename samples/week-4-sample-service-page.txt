@@ -1,0 +1,26 @@
+SAMPLE DATA. A made-up web page for a made-up company (Greenline Landscaping) in a made-up town (Cedar Hollow). No real people.
+Used in Wednesday Office Hours, Session 4. Copy everything below the line into the AI chat, under the prompt.
+------------------------------------------------------------------------------------------------
+
+THE PAGE AS IT IS TODAY
+
+Page title (the blue line in a search result): Services
+Description (the short lines under the title): [empty]
+Heading at the top of the page: Our Services
+
+Text on the page:
+Welcome to our services page! At Greenline we do it all. Our passionate team of experts delivers premium outdoor living experiences tailored to your unique needs. From concept to completion, we pride ourselves on quality, excellence and customer satisfaction. No job is too big or too small. Contact us today to learn more!
+
+THE OWNER'S FACTS
+
+Business name: Greenline Landscaping
+What this page is about: paver patios and walkways, built in backyards
+Where: Cedar Hollow and the neighboring towns
+Who it is for: homeowners
+First step: a free site visit at the house. Saturday visits are available.
+After the visit: a written quote
+What the job includes: preparing the ground, laying the pavers, cleaning up when the work is done
+Can be added to the same job: planting along a fence or a border
+How to book: the quote request form on the website, or call 555-0100
+Office hours: Monday to Friday, 8 AM to 5 PM
+What customers ask on the phone: Do you work in my town? How do I get a quote? What does a patio cost?

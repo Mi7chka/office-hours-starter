@@ -1,0 +1,29 @@
+{
+  "session": 5,
+  "week": 5,
+  "module": "w5-content",
+  "title": "Follow along: one customer question becomes five pieces",
+  "minutes": 15,
+  "goal": "Turn one lesson from the week into a post, a video script, an email, a website answer and a Google post. Find the weakest one, fix only that one, and approve what is ready.",
+  "you_need": ["This demo, open in a browser", "An AI chat you are signed in to (Claude or ChatGPT)", "Optional: one question a customer asked you this week, and three things you wrote yourself"],
+  "steps": [
+    {"at": "0:00", "min": 1, "do": "Open the demo (double-click Launch) and click Week 5.", "see": "Step 1, This week's idea: a customer's question about planting in the fall, a list of facts and three writing samples.", "tip": "Everything here is made up. Your own words never leave your browser."},
+    {"at": "0:01", "min": 2, "do": "Read step 1 like the owner. Find the crew's last planting day in the facts, then read the three writing samples out loud.", "see": "Saturday, November 21, and three short pieces that sound like one person.", "tip": "The samples are how the AI learns the voice. A text, an email and an old post are enough."},
+    {"at": "0:03", "min": 2, "do": "In step 2, find the rules inside the prompt. Press Copy the prompt and the material, paste it into your AI chat and send.", "see": "The rules: use only the facts I gave you, no invented numbers, reviews or promises, never name a customer, write like the samples.", "tip": "This is the new-hire rule again: the job, the context, the rules, an example. The check is you."},
+    {"at": "0:05", "min": 2, "do": "Copy the AI's whole answer, paste it into step 3 and press Use this answer.", "see": "Five cards in step 4, each with a word count: a post, a video script, an email, a website answer and a Google post.", "tip": "No AI chat handy? Use the button that loads the sample answer."},
+    {"at": "0:07", "min": 3, "do": "Read the five cards. On the weakest one, press This one is weakest. In step 5, type what is wrong with it and press Copy the follow-up. Send it to the AI, paste the fixed piece back and press Replace this piece.", "see": "The card in step 4 shows the new text and a badge that says fixed.", "tip": "In the sample answer, the Google Business Profile post promises a guarantee. No fact says that."},
+    {"at": "0:10", "min": 2, "do": "In step 6, tick Approve for each piece you would put your name on. Press Copy the approved pieces.", "see": "A badge counts the approved pieces, and only those are copied.", "tip": "Scheduling is not approving. Read the whole piece first."},
+    {"at": "0:12", "min": 2, "do": "In step 7, tick Monday and Tuesday. In step 8, type this week's number and press Add this week.", "see": "20 of 60 budgeted minutes ticked off, and a new bar in the chart.", "tip": "The hour is a budget, not a promise. The number is measured. Why it moved is your best guess."},
+    {"at": "0:14", "min": 1, "do": "Click Home.", "see": "A new number on your one screen: pieces approved this week.", "tip": "Next Wednesday: what happens when those new people get in touch."}
+  ],
+  "real_life": [
+    "Tonight: press Clear the sample and type my own idea. Write down one question a customer asked you this week, in their words, with a few true facts and three things you wrote yourself. Leave out anything private about a customer.",
+    "Run the prompt on it, with the word landscaping changed to your own business. Approve the best piece and schedule it for tomorrow, or set a reminder and post it by hand.",
+    "On Friday, write down one number: how many new people got in touch this week. Press Clear the log first, then add your own."
+  ],
+  "if_it_breaks": [
+    "The AI is slow or down: load the sample answer in step 3 and keep going. Step 5 has a sample fix for the Google Business Profile post too. The lesson is the checking and the approving, not the typing.",
+    "The five cards do not appear: each piece has to start with its own line, PIECE 1: to PIECE 5:. Step 3 shows a line to send the AI that asks for that shape.",
+    "Start over with the sample data puts everything back."
+  ]
+}

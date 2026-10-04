@@ -1,0 +1,27 @@
+SAMPLE DATA. Summary formulas for the Session 7 demo (Greenline Landscaping, a made-up company). No real people.
+Before you paste: the clean table sits on a tab named Clean, headers in row 1, columns in this order:
+Date, Customer, Service, Town, Amount (USD), Paid, How they found us.
+Copy everything below the line and paste it into cell A1 of the tab named Summary. The columns are separated by tabs.
+With the sample file you should see: all services 26655 and 29 jobs, unpaid 8775 on 5 jobs, 1 job with no amount.
+For the chart: select the block from "Service" down to "Lawn care" (two columns) and look for chart in the menu.
+------------------------------------------------------------------------------------------------
+Greenline Landscaping: October on one screen (SAMPLE DATA)
+
+Service	Revenue (USD)	Jobs
+Patio and hardscape	=SUMIF(Clean!C:C,A4,Clean!E:E)	=COUNTIF(Clean!C:C,A4)
+Mulch and planting	=SUMIF(Clean!C:C,A5,Clean!E:E)	=COUNTIF(Clean!C:C,A5)
+Fall cleanup	=SUMIF(Clean!C:C,A6,Clean!E:E)	=COUNTIF(Clean!C:C,A6)
+Hedge trimming	=SUMIF(Clean!C:C,A7,Clean!E:E)	=COUNTIF(Clean!C:C,A7)
+Lawn care	=SUMIF(Clean!C:C,A8,Clean!E:E)	=COUNTIF(Clean!C:C,A8)
+All services	=SUM(Clean!E:E)	=COUNTA(Clean!B:B)-1
+
+Unpaid	Amount (USD)	Jobs
+Unpaid, amount known	=SUMIF(Clean!F:F,"No",Clean!E:E)	=COUNTIFS(Clean!F:F,"No",Clean!E:E,">0")
+Any job with no amount		=COUNTA(Clean!B:B)-1-COUNT(Clean!E:E)
+
+How they found us	Jobs
+Repeat customer	=COUNTIF(Clean!G:G,A16)
+Referral	=COUNTIF(Clean!G:G,A17)
+Google search	=COUNTIF(Clean!G:G,A18)
+Website form	=COUNTIF(Clean!G:G,A19)
+Yard sign	=COUNTIF(Clean!G:G,A20)

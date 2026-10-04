@@ -1,0 +1,11 @@
+After the five pieces come back, send these two follow-ups, one at a time.
+
+1. Which one of these five is the weakest? Name one. Check each against my facts and my samples, and list anything you added that I did not give you.
+
+2. Fix only that one, and keep the owner's voice.
+
+The demo builds the second one for you, with the piece you picked and your reason:
+
+Fix only PIECE [number], [the piece]. Leave the other four as they are.
+Why it is the weakest: [say what is wrong with it]
+Keep the owner's voice and use only the facts I gave you. Send back only that piece, starting with PIECE [number]:, then one line starting with WHY: that says what you changed and why.

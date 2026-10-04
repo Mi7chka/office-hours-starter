@@ -1,29 +1,29 @@
 {
   "session": 1,
   "week": 1,
-  "module": "w1-inbox",
-  "title": "Follow along: your inbox becomes a task list",
+  "module": "week-1-today",
+  "title": "Build together: the Today page",
   "minutes": 15,
-  "goal": "Sort a real inbox into four piles with AI, catch the one it gets wrong, and leave with a to-do list you can paste into a spreadsheet.",
-  "you_need": ["This demo, open in a browser", "An AI chat you are signed in to (Claude or ChatGPT)", "Optional: 10 of your own emails"],
+  "goal": "Take the first piece of the command center through the six steps: design, prompt, review, test, ship, log. You leave with a project folder, a rules file for your AI, and a Today page that opens with a double-click.",
+  "you_need": ["The class starter folder, unzipped", "The Claude app or Claude Code", "Nothing to install"],
   "steps": [
-    {"at": "0:00", "min": 1, "do": "Open the demo (double-click Launch) and click Week 1.", "see": "Greenline Landscaping's inbox: 12 emails in a table.", "tip": "Everything here is made up. Your own data never leaves your browser."},
-    {"at": "0:01", "min": 2, "do": "Read the inbox like an owner. Count the emails that truly need you today.", "see": "Most people count three or four out of twelve.", "tip": "Say your number out loud or type it in the chat before going on."},
-    {"at": "0:03", "min": 2, "do": "Go to step 2, Give the AI the job. Find the job, the rules and the check inside the prompt.", "see": "Sort into four piles; never quote a price; never promise a date; ask if unsure.", "tip": "This is the new-hire rule. Change one line so it sounds like your business."},
-    {"at": "0:05", "min": 3, "do": "Press Copy the prompt and the emails. Paste into your AI chat and send. Copy its whole answer.", "see": "Four headings (REPLY TODAY, CAN WAIT, FYI, JUNK) and a TASKS list.", "tip": "No AI chat handy? Use the button that loads the sample answer."},
-    {"at": "0:08", "min": 2, "do": "Paste the answer into step 3 and press Use this answer.", "see": "Four piles appear, each email as a card.", "tip": "If the piles do not appear, ask the AI to start each line with EMAIL and its number."},
-    {"at": "0:10", "min": 2, "do": "Which one is wrong? Look in FYI for the QuickBooks notice about three overdue invoices. Move it. Then add a rule about money owed to you.", "see": "The moved card turns amber, and your rule appears in the prompt.", "tip": "The AI could not know what a late invoice costs you until you told it."},
-    {"at": "0:12", "min": 2, "do": "Scroll to Your list for today. Tick one task done, then press Copy for Google Sheets and paste it into a blank sheet.", "see": "A table: task, who, due.", "tip": "Every task starts with a verb. That is the difference between an inbox and a list."},
-    {"at": "0:14", "min": 1, "do": "Click Home.", "see": "The first number on your one screen: emails that need a reply today.", "tip": "Next Wednesday the second tile lights up: a lead form that fills the list by itself."}
+    {"at": "0:00", "min": 2, "do": "Design: Double-click Launch in the starter folder, then press Start the six steps.", "see": "The home screen with eight pieces that say Not built yet, then the build page for week 1.", "tip": "This folder is your project folder. Keep it somewhere you will find it, such as Documents."},
+    {"at": "0:02", "min": 2, "do": "Design: Under step 1, open The rules file for the AI and read the rules out loud.", "see": "It drafts and a person sends. It says what it is unsure about. It never invents a number. It never sends, pays, posts or deletes.", "tip": "The same rules sit in your folder as CLAUDE.md. Add one rule of your own there after class."},
+    {"at": "0:04", "min": 2, "do": "Design: Read the design note: who uses it, the one question it answers, what is on it, what done means.", "see": "Four short answers. The question is: what needs me today?", "tip": "Design comes before the prompt. If you cannot answer the four questions, the AI cannot either."},
+    {"at": "0:06", "min": 3, "do": "Prompt: Press Copy the build prompt, paste it into the Claude app or Claude Code, and send. Save the file it makes as week-1-today.js in the pieces folder, and say yes to replace.", "see": "Your computer asks whether to replace week-1-today.js. That question means the name is right.", "tip": "In the Claude app you save the file yourself. In Claude Code it writes the file for you."},
+    {"at": "0:09", "min": 2, "do": "Review: Press I saved the file. Look again. Then read the Today page against the design note and find the one thing it got wrong.", "see": "The Today page, with the one thing first at the top and Jordan's list under it.", "tip": "Do not ask whether it is right. Ask which one thing is wrong."},
+    {"at": "0:11", "min": 2, "do": "Test: Press How it was built, go to step 4, and run the three checks with the sample business. Tick each one you saw.", "see": "Three ticks, and the words Three checks passed.", "tip": "The checks were written before the build. That is what makes them a test."},
+    {"at": "0:13", "min": 1, "do": "Ship: In step 5, type your runbook line: the step, the sign it worked, how to undo it.", "see": "Three short answers, saved as you type.", "tip": "For example: each morning I write today's list. The first thing is at the top. Start over puts it back."},
+    {"at": "0:14", "min": 1, "do": "Log: In step 6, type what changed and why, then press Add to my change log.", "see": "The line under the button says your change log has 1 line.", "tip": "Next Wednesday we build the board, and the page that shows this log."}
   ],
   "real_life": [
-    "Tomorrow morning: press Use my own emails and paste ten of yours, with a blank line between them. Leave out anything with a password or a card number.",
-    "Add one rule that is true only for your business, such as which customers always come first.",
-    "Save your finished prompt somewhere you will find it. It is now your inbox instruction."
+    "Tomorrow morning: press My business on the home screen, open Today, and write your own list. The first line is the one thing first.",
+    "Open CLAUDE.md in your project folder and add one rule that is true only for your business.",
+    "Write down three things you retype every week. Those are the next pieces worth building."
   ],
   "if_it_breaks": [
-    "The AI is slow or down: load the sample answer and keep going. The lesson is the checking, not the typing.",
-    "The piles look wrong after pasting: the answer needs each line to start with EMAIL and its number. Ask the AI to redo it in that shape.",
-    "Start over with the sample data puts everything back."
+    "The AI is slow, or the page does not show after you saved the file: take the finished week-1-today.js from the pieces folder of the complete project, save it in your pieces folder, and keep going. The lesson is the six steps, not the typing.",
+    "Your computer did not ask to replace the file: the name is not exactly week-1-today.js, or it is not in the pieces folder. Rename it, move it, and press Look again.",
+    "The page says the file needs a fix: copy that sentence to the AI and ask for the whole file again. Start over with the sample data puts the Today page back."
   ]
 }

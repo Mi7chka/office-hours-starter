@@ -1,0 +1,29 @@
+{
+  "session": 8,
+  "week": 8,
+  "module": "w8-breaks",
+  "title": "Follow along: a panicked text becomes a support request, a sheet and a plan",
+  "minutes": 15,
+  "goal": "Turn a panicked text into a clear support request, print the one page that says who to call, and leave with a 90-day plan that puts all eight weeks in order.",
+  "you_need": ["This demo, open in a browser", "An AI chat you are signed in to (Claude or ChatGPT)", "Optional: a printer, or save as PDF from the print window"],
+  "steps": [
+    {"at": "0:00", "min": 1, "do": "Open the demo (double-click Launch), click Week 8 and read The text message in step 1.", "see": "A Friday 4:41 PM text from Luis, the crew lead: the card thing isn't working again.", "tip": "Everything here is made up. Notice the word again: it broke before, and nobody wrote down the fix."},
+    {"at": "0:01", "min": 2, "do": "Read The calm questions under the message. Find the one answer that is empty.", "see": "An amber note under The support request: the exact words on the screen are missing, and that is the first thing support will ask for.", "tip": "Luis wrote \"something about connection\". Nobody can act on that."},
+    {"at": "0:03", "min": 2, "do": "Press Add what Luis sends back. Check that It stopped us taking money is picked, then press Copy the support request.", "see": "The request now quotes the screen word for word, and a green note says every question is answered.", "tip": "Two things changed that day. The request lists both and blames neither."},
+    {"at": "0:05", "min": 3, "do": "Go to The same job, done by an AI. Press Copy the prompt and the message, paste it into your AI chat and send. Copy its whole answer, paste it into the box under the prompt and press Compare with the form's version.", "see": "The AI's version beside The form's version, and a note that answers: did it guess the cause?", "tip": "No AI chat handy? Use the button that loads the sample answer."},
+    {"at": "0:08", "min": 2, "do": "Scroll to step 2, The one-page when-it-breaks sheet. Read the Card readers row, then press Add a row and type one tool your own business cannot run without.", "see": "Eight Greenline rows under five headings, and a new empty row at the bottom with a hint in each cell.", "tip": "Names and phone numbers go on the page. Passwords never do."},
+    {"at": "0:10", "min": 1, "do": "Press Print the sheet. Look at the preview, then print it, save it as a PDF, or cancel.", "see": "One page: who to call first, the five questions, the table, and an empty log at the bottom.", "tip": "Keep it in a Google Doc, and keep one printed copy for the day the internet is down."},
+    {"at": "0:11", "min": 2, "do": "In step 3, Five security habits, tick the habits your business already has. Then press Check this message under the scam email from Week 1.", "see": "A count of the habits that are done, and all three phishing signs found, each with the words that gave it away.", "tip": "Look at the sender's address too: acc0unt is spelled with a zero."},
+    {"at": "0:13", "min": 2, "do": "In step 4, set Week 1 starts on to a real date and tick Week 1 to see the bar move. Press Download the plan as text, then click Home.", "see": "Every week shows its real dates. On the home screen, 90-day plan steps done reads 1 of 12.", "tip": "One thing at a time. If a week goes sideways, pick the same item up on Monday."}
+  ],
+  "real_life": [
+    "Tonight: turn on two-step login for your email and save the backup codes. If it is already on, do the bank.",
+    "Press Start a blank sheet for my business and fill in two rows: your email, and whatever you take money with. Then press Print the sheet.",
+    "The next time something breaks: press Use my own problem, answer the calm questions, and send the request the page builds. Leave every password out."
+  ],
+  "if_it_breaks": [
+    "The AI is slow or down: load the sample answer and keep going. The lesson is the five questions, not the typing.",
+    "The print preview shows the whole page: close it and use the Print the sheet button, not the browser's own print command.",
+    "Start over with the sample data puts everything back. It also clears your plan ticks, so press Download the plan as text first."
+  ]
+}

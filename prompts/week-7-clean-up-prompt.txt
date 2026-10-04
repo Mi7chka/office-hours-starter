@@ -1,0 +1,6 @@
+You are helping the office manager of a small landscaping company. Below is a jobs export.
+1. List every problem you find: duplicate rows, mixed date formats, blanks, names spelled more than one way.
+2. Then give me a clean table: the same 7 columns in the same order, one row per job, exact duplicate rows removed, dates as YYYY-MM-DD. Write the table as comma-separated lines with the header row first.
+Rules: do not change any amount. Leave a blank amount blank. Do not add anything up. List every row you altered or removed, and why. Flag anything you are unsure of and ask me. Do not guess.
+
+Export:

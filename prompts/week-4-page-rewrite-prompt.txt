@@ -1,0 +1,9 @@
+You are helping a small landscaping company fix one web page so search engines and AI assistants can understand it. Below: the page today, then the owner's facts.
+Write:
+1. A page title with the service and the town.
+2. A two-sentence description.
+3. Three questions a customer would ask, in their own words, each with a two-sentence answer.
+Rules: use only the facts I gave you; do not invent reviews, awards or numbers. If a fact is missing, say so and ask me. Plain words, no hype.
+Layout: put each item on its own line, starting with TITLE:, DESCRIPTION:, Q1:, A1:, Q2:, A2:, Q3:, A3:. End with a line starting MISSING: for any fact you needed and did not have.
+
+Page and facts:

@@ -1,0 +1,79 @@
+TONIGHT'S CHECKS. Wednesday Office Hours, Session 4: Get found.
+Five checks, all free, about 25 minutes for all five. No new software.
+The short block is for pasting into the Meet chat. The notes under it say what to look for.
+------------------------------------------------------------------------------------------------
+
+PASTE THIS INTO THE CHAT
+
+Tonight's five checks:
+1. Search what you sell + your town. Are you on the first screen?
+2. Search site:yourdomain.com. Which of your pages has Google read?
+3. Google Business Profile: claimed? Category, hours and phone all true?
+4. Your website: one clear page for each service?
+5. Ask an AI assistant who does your service in your town. Which fact is wrong?
+
+------------------------------------------------------------------------------------------------
+
+THE NOTES
+
+CHECK 1. Search yourself the way a stranger would. (3 minutes)
+- Type what you sell plus your town. Not your business name.
+- Look at the first screen before you scroll. Are you on it? Who is?
+- Results can differ from person to person and from place to place. A private browser window gives a more honest look than your usual one.
+- Write down the exact words you searched. You will search the same words again next month.
+
+CHECK 2. See what Google has read. (2 minutes)
+- In Google, type site:yourdomain.com with your own web address and no spaces.
+- Every result is a page Google has read. The blue line is that page's title.
+- Look for titles that say only Home, Services or About. Those are the first to fix.
+- No results at all? Google may not have read your site yet. Google Search Console is the free tool that shows why.
+- This is a rough look, not a full count. Search Console has the full picture.
+- While you are there: type your web address followed by /sitemap.xml. Many website builders make this list of pages for you.
+
+CHECK 3. Your Google Business Profile. (10 minutes)
+- Search your own business name. Is there a listing with your hours and phone number?
+- Is it claimed? If you are not sure, look for the option to claim it as the owner.
+- Is the category the one that names your main service?
+- Are the hours true, holidays included?
+- Are the name, address and phone written exactly as they are on your website?
+- Are the photos real: your work, your crew, your storefront?
+- When did you last ask a customer for a review? When did you last answer one?
+
+CHECK 4. One clear page for each service. (5 minutes)
+- Open your website. Count the things you sell. Count the pages that describe them.
+- A single Services page with a list is one page trying to answer every question.
+- A good service page says, in plain sentences: what it is, where you do it, who it is for, and how to book.
+- It also answers the questions customers ask on the phone, in their words.
+- Pick the one service that earns you the most. That page gets fixed first.
+
+CHECK 5. Ask an AI assistant. (5 minutes)
+- Open ChatGPT, Claude, Gemini or Copilot.
+- Ask: who does [your service] in [your town]? Then ask: what do you know about [your business name]?
+- Do not ask whether it is right. Ask which one is wrong: the hours, the phone, the services, the town.
+- You cannot edit the assistant. Find the page or the listing it read, fix that, and check again in a few weeks.
+
+------------------------------------------------------------------------------------------------
+
+WHAT NOT TO DO
+
+- Do not pay anyone who promises the first position. Nobody can promise that.
+- Do not buy reviews or links.
+- Do not stuff a page with town names. Name the towns you really serve, once, in a sentence.
+- Do not expect a change overnight. This takes weeks, not days. Look once a month.
+
+------------------------------------------------------------------------------------------------
+
+THE REWRITE PROMPT FROM THE DEMO
+
+Paste this into an AI chat. Under it, paste the text of one of your own service pages and a short list of true facts about that service.
+
+You are helping a small business fix one web page so search engines and AI assistants can understand it. Below: the page today, then the owner's facts.
+Write:
+1. A page title with the service and the town.
+2. A two-sentence description.
+3. Three questions a customer would ask, in their own words, each with a two-sentence answer.
+Rules: use only the facts I gave you; do not invent reviews, awards or numbers. If a fact is missing, say so and ask me. Plain words, no hype.
+
+Page and facts:
+
+Read what comes back before any of it goes on your website. It drafts. You publish.

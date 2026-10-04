@@ -1,0 +1,53 @@
+SAMPLE DATA. A made-up incident at a made-up company (Greenline Landscaping). No real people. No real vendor contacts.
+Used in Wednesday Office Hours, Session 8. Copy everything between the two lines into the AI chat, under the prompt.
+------------------------------------------------------------------------------------------------
+
+TEXT MESSAGE
+From: Luis (crew lead)
+To: Jordan (owner)
+Sent: Friday, 4:41 PM
+hey boss the card thing isnt working again and customers are waiting. tried it like 3 times, it just spins and then says something about connection?? mrs whitfield is standing right here and wants to pay before the weekend. worked fine this morning. what do i do
+
+WHAT THE OWNER KNOWS
+- Greenline's crew of four works out of two trucks most days. Each truck carries a tablet and its own card reader. Both readers are on the same Square account.
+- Luis's truck is at the Whitfield house this afternoon. Luis said at lunch that the phone signal out there is weak.
+- This morning Luis's truck was at a different job across town. His reader took a card there at 10:15 AM with no trouble.
+- Luis's tablet installed an update and restarted itself at about 12:30 PM.
+- The other truck (Ana's) took a card payment on its own reader at 2:10 PM today with no trouble.
+- This happened once before, earlier this month. Somebody got it working. Nobody wrote down what fixed it.
+- There is no written backup plan for taking a payment when a reader is down.
+- Contact for the support request: Jordan Reyes, owner, 555-0110, jordan@greenline-sample.example.com. Jordan can be reached until 6:00 PM today.
+
+------------------------------------------------------------------------------------------------
+STOP COPYING HERE. Do not paste anything below this line with the message.
+
+
+ANSWERS TO GIVE WHEN THE AI ASKS FOR WHAT IS MISSING
+(The message leaves these out on purpose, so the AI has something to ask for.)
+
+If it asks for the exact words on the screen:
+The screen says: "Reader not connected. Check your connection and try again."
+(Made-up wording for this sample. It is not copied from any real app.)
+
+If it asks when it first failed:
+The first failed try was at 4:38 PM. All 3 tries showed the same message.
+
+If it asks whether the tablet is online:
+Luis can open a web page on the tablet, but slowly. The tablet shows one bar of signal.
+
+
+WHAT TO LOOK FOR IN THE ANSWER (for the run-through before the session, not for pasting)
+
+1. What do they see?        It should say the exact wording is missing and ask for it.
+2. One person or everyone?  One reader. Ana's reader worked at 2:10 PM, so it is not the whole account.
+3. What changed?            Two things: the tablet update at about 12:30 PM, and a job site with a weak signal.
+                            It should list both and name neither as the cause. If it blames one, that is
+                            the line to point at when you ask the room "did it guess?"
+4. Can they repeat it?      Yes. 3 tries, the same message. It should say to stop retrying.
+5. What does it stop?       Taking money, with a customer waiting. The most urgent of the three levels.
+6. Try first, in order      One step at a time. A sensible order: get the customer on her way with an
+                            invoice by email, check the signal, restart the reader, then restart the tablet.
+7. The support request      Under 120 words. Exact words, the time, one reader and not both, what was
+                            tried, how to get Jordan and until when. No password. No guess at the cause.
+8. The word "again"         A good answer notices that it happened before and nothing was written down.
+                            If it does not, say it yourself: every completed job gets logged.

@@ -1,0 +1,178 @@
+THE ONE-PAGE "WHEN IT BREAKS" SHEET
+Used in Wednesday Office Hours, Session 8.
+Part 1 is the blank sheet. Part 2 is the same sheet filled in for Greenline Landscaping.
+Part 2 is SAMPLE DATA: a made-up company, made-up people and made-up vendor contacts.
+
+THE FIVE HEADINGS (paste this one line into the Meet chat)
+Tool | Who owns the login | Support contact | While it's down | Renews
+
+HOW TO SET IT UP IN GOOGLE DOCS (about 3 minutes)
+1. Open a blank Google Doc. Call it: When it breaks.
+2. Look for the table option in the Insert menu. Make 5 columns, with one row for the headings and one row for each tool.
+3. Type the five headings across the top row. Type one tool at the start of each row.
+4. Fill in the rest as you find the answers. An empty cell is useful. It shows you what nobody knows yet.
+5. Under the table, add the "top of the page" lines and the log from Part 1.
+6. Print one copy. Keep it where the person who is there at 4:45 on a Friday can find it.
+
+THE ONE RULE
+Passwords are never written on this page. They live in the password manager.
+This page says whose account it is and who to call.
+
+
+================================================================================================
+PART 1. THE BLANK SHEET
+================================================================================================
+
+WHEN IT BREAKS: [business name]
+Last checked: [date]          Checked by: [name]
+
+TOP OF THE PAGE
+First call inside the business:  [name, phone]
+Second call:                     [name, phone]
+How urgent is it?
+   STOPPED TAKING MONEY   call now
+   SLOWED US DOWN         today
+   ANNOYING               write it in the log, fix it this week
+Before you call anyone, write down five things:
+   1. What exactly do you see? The exact words, the time, what you were doing.
+   2. Is it one person or everyone?
+   3. What changed?
+   4. Can you make it happen again?
+   5. What does it stop?
+Then one fix at a time.
+
+THE TABLE (one row for each tool the business cannot run without)
+
+Tool:                Email (Gmail or Outlook)
+Who owns the login:  [name]   Second person: [name]
+Support contact:     [phone, help page, status page]
+While it's down:     [what we do today]
+Renews:              [date, and which card pays for it]
+
+Tool:                Website
+Who owns the login:  [name]   Second person: [name]
+Support contact:     [who built it, phone, email]
+While it's down:     [what we do today]
+Renews:              [date, and which card pays for it]
+
+Tool:                Domain name
+Who owns the login:  [whose name the domain is registered in]   Second person: [name]
+Support contact:     [where it is registered, phone, help page]
+While it's down:     [what we do today]
+Renews:              [date. Is auto-renew on?]
+
+Tool:                QuickBooks
+Who owns the login:  [name]   Second person: [name]
+Support contact:     [vendor help page, and your bookkeeper or accountant]
+While it's down:     [how we invoice by hand for a day]
+Renews:              [date, and which card pays for it]
+
+Tool:                Square or Stripe (how we take money)
+Who owns the login:  [name]   Second person: [name]
+Support contact:     [phone, help page, status page]
+While it's down:     [the backup way to take a payment]
+Renews:              [date, if there is one]
+
+Tool:                Shopify (leave this row out if you do not sell online)
+Who owns the login:  [name]   Second person: [name]
+Support contact:     [help page, status page, who built the store]
+While it's down:     [what we tell customers, where orders go]
+Renews:              [date, and which card pays for it]
+
+Tool:                Internet provider
+Who owns the login:  [whose name the account is in]   Second person: [who else is allowed to call]
+Support contact:     [phone, account number]
+While it's down:     [whose phone becomes the hotspot]
+Renews:              [contract end date]
+
+Tool:                Phones
+Who owns the login:  [whose name the account is in]   Second person: [who else is allowed to call]
+Support contact:     [phone, account number]
+While it's down:     [how customers get us]
+Renews:              [date]
+
+Tool:                Each automation (one row each)
+Who owns the login:  [whose account it runs in]
+Support contact:     [who built it]
+While it's down:     [what it does, how we would notice it stopped, how we do the job by hand]
+Renews:              [date]
+
+THE LOG (one line every time something breaks)
+Date | What broke | What fixed it | Who fixed it
+
+
+================================================================================================
+PART 2. FILLED SAMPLE: GREENLINE LANDSCAPING (SAMPLE DATA, ALL MADE UP)
+================================================================================================
+Every name, phone number, address and date below is invented for the class.
+The vendor contacts are placeholders. Look up the real ones inside your own accounts.
+
+WHEN IT BREAKS: Greenline Landscaping
+Last checked: the first Monday of this month          Checked by: Casey Doyle
+
+TOP OF THE PAGE
+First call inside the business:  Jordan Reyes (owner), 555-0110
+Second call:                     Casey Doyle (office manager), 555-0111
+
+THE TABLE
+
+Tool:                Email (Gmail)
+Who owns the login:  Jordan Reyes holds the admin account.   Second person: Casey Doyle
+                     Two-step login is on. The backup codes are printed and in the office safe.
+Support contact:     SAMPLE help page: help.mail.example.com   SAMPLE phone: 555-0101
+While it's down:     Casey calls today's customers from the paper schedule. Quotes wait until email is back.
+Renews:              Monthly, paid from the business bank card. Check that card's expiry date every January.
+
+Tool:                Website (built on WordPress)
+Who owns the login:  Jordan has an admin login.   Second person: Casey, with a separate login
+Support contact:     Nico Ferrand, Maple Street Web (made-up company), 555-0123, nico@maplestreetweb.example.com
+While it's down:     Customers can still call. Tell Nico. New quote requests come in by phone until it is back.
+Renews:              Hosting renews every June. Nico sends a reminder in May.
+
+Tool:                Domain name (greenline-sample.example.com)
+Who owns the login:  Registered in the business's name, in Jordan's account. Not in the web designer's.   Second person: Casey
+Support contact:     NameHarbor (made-up registrar), 555-0134, support@nameharbor.example.com
+While it's down:     If the domain lapses, the website and the email both stop. Jordan renews it the same day.
+Renews:              March 14 every year. Auto-renew is on.
+
+Tool:                QuickBooks
+Who owns the login:  Jordan holds the main login.   Second person: Casey, with a separate login
+Support contact:     SAMPLE help page: help.quickbooks.example.com
+                     Bookkeeper: Helen Marsh, Lakeside Bookkeeping (made-up company), 555-0156
+While it's down:     Write invoices on the paper pad in the top office drawer. Enter them when it is back.
+Renews:              Monthly, paid from the business bank card.
+
+Tool:                Card readers (Square), one in each truck
+Who owns the login:  Jordan holds the account.   Second person: Casey
+                     Crew leads use the tablets. They do not have the account login.
+Support contact:     SAMPLE phone: 555-0167   SAMPLE status page: status.square.example.com
+While it's down:     Do not keep the customer waiting. Write the name and the amount on the job sheet.
+                     Casey emails an invoice from QuickBooks before 6 PM the same day.
+Renews:              No renewal date in this sample. Casey checks both readers and their chargers every Monday.
+
+Tool:                Office internet
+Who owns the login:  The account is in the business's name.   Second person: Jordan and Casey are both allowed to call
+Support contact:     Cedar Hollow Internet (made-up provider), 555-0178, account number SAMPLE-0000
+While it's down:     Casey's phone becomes the hotspot. Printing waits.
+Renews:              The contract ends in October. Put a reminder in the calendar for September.
+
+Tool:                Phones
+Who owns the login:  Jordan is the account holder.   Second person: Casey is allowed to call
+Support contact:     Tri-County Mobile (made-up provider), 555-0189, account number SAMPLE-0000
+While it's down:     Crew leads use their personal phones. Casey calls the provider from a personal phone.
+Renews:              The plan is reviewed every August.
+
+Tool:                Automation (from Session 2): when a lead fills out the quote form, save it to the leads sheet, and tell me
+Who owns the login:  It runs in Jordan's account.   Second person: Casey
+Support contact:     Nico Ferrand, who built it, 555-0123
+While it's down:     How we would notice: the notice emails stop. Casey sends a test lead on the first of every month.
+                     If it has stopped, Casey copies new leads into the sheet by hand each morning.
+Renews:              Monthly, paid from the business bank card.
+
+Greenline does not sell online, so there is no Shopify row. Leave out any row your business does not need.
+
+THE LOG
+Date                     | What broke                                        | What fixed it      | Who fixed it
+Earlier this month       | Luis's card reader would not take a card          | Not written down   | Not written down
+Friday, 4:38 PM (sample) | Luis's card reader: "Reader not connected. Check   | [fill in when it   | [name]
+                         | your connection and try again." Failed 3 times.    | is fixed]          |

@@ -1,0 +1,56 @@
+SAMPLE DATA. How to build the Week 2 lead form for real, with a Google Form and a Google Sheet.
+Greenline Landscaping is a made-up company. No real people.
+Used in Wednesday Office Hours, Session 2. The leads are in samples/week-2-sample-leads.csv. The prompt is in prompts/week-2-lead-reply-prompt.txt.
+------------------------------------------------------------------------------------------------
+
+WHAT IT DOES
+One sentence: when a lead fills out the form, save it, and tell me.
+  Trigger: a Google Form is submitted.
+  Action:  a new row lands in a Google Sheet.
+  Check:   a notice email arrives.
+  Then:    the new row is pasted into an AI chat, which drafts the reply. Nothing is sent.
+
+1. THE FORM
+Title:        Greenline Landscaping: request a quote (SAMPLE)
+Description:  Sample form for a class. Greenline Landscaping is a made-up company.
+Questions, in this order, so the Sheet columns match samples/week-2-sample-leads.csv:
+  1. Name                     short answer, required
+  2. Email                    short answer, required
+  3. Phone                    short answer, not required (lead 6 has none, on purpose)
+  4. Service needed           dropdown with these seven choices:
+                                Lawn care (weekly)
+                                Fall cleanup
+                                Patio or hardscape
+                                Hedges and mulch
+                                Drainage
+                                Commercial property
+                                Something else
+  5. Details                  paragraph
+  6. Best time to reach you   short answer
+Check that the form does not ask the person to sign in.
+The form inside the demo has a seventh question, How did you find us? Add it as a dropdown if you want to know where your leads come from.
+
+2. THE TWO SETTINGS (these are the whole automation)
+  a. In the form's Responses area, look for the option that links the form to a new Google Sheet.
+     Name the Sheet: Greenline leads (SAMPLE)
+  b. In the same area, look for the setting that emails you each time there is a new response. Turn it on.
+
+3. THE TEST RUN
+  a. Open the form's fill-out page and submit leads 1, 2 and 3 from the CSV, one at a time.
+     Leads 2 and 3 are the same person twice. That is the duplicate.
+  b. Confirm three rows in the Sheet, each with a time in the first column.
+  c. Confirm three notice emails. Note how long each one took to arrive.
+  d. Submit lead 4, Tomas Reyes. He is the 9 PM lead.
+  e. Copy the header row and Tomas's row from the Sheet. Paste the prompt, then the two rows, into an AI chat.
+  f. Read the draft. Ask which part is wrong. Send nothing.
+
+THE OTHER ROWS
+Lead 5 is one more ordinary lead. Lead 7 is too.
+Lead 6 has no phone number, on purpose: the draft should not invent one.
+Lead 8 is a junk entry, to show what form spam looks like.
+
+WITH YOUR OWN BUSINESS
+Change the title, the description and the service choices to yours. Keep the two settings.
+Test it with a made-up customer before a real one touches it.
+Write three lines and keep them where the next person can find them: what starts it, what it does, who gets told.
+Do not put real customer information into the sample form or the sample Sheet.
