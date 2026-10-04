@@ -17,10 +17,11 @@ browser on your own computer.
 
 ## Play it as a game: Save Greenline
 
-Press **Play** at the top of the app. Greenline Landscaping is drowning in busywork and the owner
-has handed you the keys. Each week's tool is one mission: a short scene, three quick questions, then
-the real job, with objectives that tick themselves. Missions unlock in order, and a new one arrives
-every Wednesday. The game is optional: the class and the tools work without it.
+Press **Play** at the top of the app. Eight goofy bandits are stealing time from Greenline
+Landscaping. You drive the little green truck around town, collect clues, and catch each bandit in
+a hands-on mini-game, with your helper robot Sprout, who is fast, keen, and wrong about one thing
+in every case. Cases unlock in order and a new one arrives every Wednesday. The game is optional:
+the class and the tools work without it.
 
 ## What is in it so far
 

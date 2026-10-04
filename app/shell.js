@@ -143,8 +143,9 @@
   // ── modules ──
   OH.register = function (mod) { OH.modules[mod.week] = mod; };
 
-  // ── the game (optional): app/game/game.js builds on this, each mission file adds one mission. See GAME.md. ──
+  // ── the game (optional): the files in app/game/ build on this, each mission file adds one case. See GAME.md. ──
   OH.game = { missions: {}, mission: function (data) { if (data && data.week) OH.game.missions[data.week] = data; } };
+  const GAME_FILES = ["art", "sound", "kit", "game", "fallback"];   // in this order: the pictures, the sound, the toolbox, the engine, the stand-in for old-format missions
 
   function load(src) {                                // async=false: fetched together, run in the order added
     return new Promise((res) => { const s = document.createElement("script"); s.src = src; s.async = false; s.onload = res; s.onerror = res; document.body.appendChild(s); });
@@ -210,20 +211,20 @@
   }
   OH.openRunbook = openRunbook;
 
-  // ── the game's pages: drawn by app/game/game.js into the same view ──
+  // ── the game: app/game/game.js draws it over the whole window (it hides this page's header and footer while it is on) ──
   function gameView(path) {
     const v = document.getElementById("view"); v.innerHTML = "";
     document.getElementById("runbookBtn").hidden = true; closeRunbook();
     nav("game");
     try { OH.game.render(v, path); }
-    catch (e) { if (window.console) console.error(e); v.innerHTML = ""; v.appendChild(OH.note("The game could not open. The tools still work: use the links at the top.", "warn")); }
+    catch (e) { if (window.console) console.error(e); if (OH.game.leave) OH.game.leave(); v.innerHTML = ""; v.appendChild(OH.note("The game could not open. The tools still work: use the links at the top.", "warn")); }
   }
 
   function route() {
     const hash = location.hash || "";
-    if (OH.game.leave) OH.game.leave();              // stops the game's once-a-second objectives check
     const g = /^#\/game(?:\/([\w-]*))?$/.exec(hash);
     if (g && OH.game.render) return gameView(g[1] || "");
+    if (OH.game.leave) OH.game.leave();              // any other page: the game packs up its stage, its timers and its music
     const m = /^#\/w(\d+)/.exec(hash);
     if (m) moduleView(+m[1]); else home();
   }
@@ -233,7 +234,7 @@
     if (name) document.getElementById("bizname").textContent = name;
     const files = ["app/data/runbooks.js"];
     M.modules.forEach((id) => { files.push("app/data/" + id + ".js", "app/modules/" + id + ".js"); });
-    files.push("app/game/game.js");                    // the game comes after the tools it plays; a missing file is skipped
+    GAME_FILES.forEach((f) => files.push("app/game/" + f + ".js"));   // the game comes after the tools; a missing file is skipped
     M.modules.forEach((id) => { const week = parseInt(id.slice(1), 10); if (week) files.push("app/game/missions/m" + week + ".js"); });
     await Promise.all(files.map(load));
     window.addEventListener("hashchange", route);
