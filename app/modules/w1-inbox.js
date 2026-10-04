@@ -88,6 +88,20 @@
     intro: "Twelve emails go in. Four piles and a to-do list come out, and nothing is sent to anybody.",
     render: render,
     summary: function () { const mine = OH.store.get(K + "piles", null); if (!mine) return { label: "Emails waiting to be sorted", value: emails().length, tone: "warn" };
-      const n = Object.keys(mine).filter((k) => mine[k] === "REPLY TODAY").length; return { label: "Emails that need a reply today", value: n, tone: n ? "bad" : "ok" }; }
+      const n = Object.keys(mine).filter((k) => mine[k] === "REPLY TODAY").length; return { label: "Emails that need a reply today", value: n, tone: n ? "bad" : "ok" }; },
+    /* What the game counts as done (GAME.md). Read only: every answer comes from what this tool already saves.
+       The catch is the second one: an email sitting in a different pile from the one the AI chose. */
+    objectives: function () {
+      const isMap = (v) => !!v && typeof v === "object" && !Array.isArray(v);
+      const ai = get("ai", null), mine = get("piles", null), tasks = get("tasks", []), rules = get("rules", []), own = get("emails", null);
+      const sorted = isMap(ai) && isMap(mine) && Object.keys(mine).length > 0;
+      return [
+        { id: "sorted", label: "Sort the inbox into four piles", done: sorted, required: true },
+        { id: "caught", label: "Catch the one it got wrong and move it", done: sorted && Object.keys(ai).some((id) => !!mine[id] && mine[id] !== ai[id]), required: true },
+        { id: "task", label: "Tick one task done on your list", done: Array.isArray(tasks) && tasks.some((t) => !!t && !!t.done), required: true },
+        { id: "rule", label: "Add a rule so it gets it right tomorrow", done: Array.isArray(rules) && rules.length > 0, required: false },
+        { id: "own", label: "Run it on your own emails", done: Array.isArray(own) && own.length > 1, required: false }
+      ];
+    }
   });
 })();

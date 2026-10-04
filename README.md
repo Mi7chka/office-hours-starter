@@ -15,6 +15,13 @@ week 1 of 8 so far.
 That's it. Nothing to install. It never goes online, and anything you type stays in your own
 browser on your own computer.
 
+## Play it as a game: Save Greenline
+
+Press **Play** at the top of the app. Greenline Landscaping is drowning in busywork and the owner
+has handed you the keys. Each week's tool is one mission: a short scene, three quick questions, then
+the real job, with objectives that tick themselves. Missions unlock in order, and a new one arrives
+every Wednesday. The game is optional: the class and the tools work without it.
+
 ## What is in it so far
 
 | Week | Tool | The session | Follow along |

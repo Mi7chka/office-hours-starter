@@ -143,6 +143,9 @@
   // ── modules ──
   OH.register = function (mod) { OH.modules[mod.week] = mod; };
 
+  // ── the game (optional): app/game/game.js builds on this, each mission file adds one mission. See GAME.md. ──
+  OH.game = { missions: {}, mission: function (data) { if (data && data.week) OH.game.missions[data.week] = data; } };
+
   function load(src) {                                // async=false: fetched together, run in the order added
     return new Promise((res) => { const s = document.createElement("script"); s.src = src; s.async = false; s.onload = res; s.onerror = res; document.body.appendChild(s); });
   }
@@ -151,6 +154,7 @@
     const n = document.getElementById("nav"); n.innerHTML = "";
     n.appendChild(h("a", { href: "#/", class: week ? "" : "on" }, "Home"));
     C.sessions.forEach((s) => { if (OH.modules[s.week]) n.appendChild(h("a", { href: "#/w" + s.week, class: week === s.week ? "on" : "" }, "Week " + s.week)); });
+    if (OH.game.render) n.appendChild(h("a", { href: "#/game", class: "play" + (week === "game" ? " on" : "") }, "Play"));
   }
 
   function home() {
@@ -160,6 +164,7 @@
     v.appendChild(h("div", { class: "kicker" }, C.series + " · the demo project"));
     v.appendChild(h("h1", null, "One screen for the whole business"));
     v.appendChild(h("p", { class: "lead" }, "A small command center for a made-up company, " + C.business.name + ". It grows by one tool every Wednesday. Each tool does the job we covered that week, with sample data first and then your own."));
+    if (OH.game.homeEntry) { try { v.appendChild(OH.game.homeEntry()); } catch (e) { /* the tools work without the game */ } }
     const stats = have.map((s) => { try { const x = OH.modules[s.week].summary && OH.modules[s.week].summary(); return x ? OH.stat(x.label, x.value, "Week " + s.week + " · " + s.tool, x.tone) : null; } catch (e) { return null; } }).filter(Boolean);
     if (stats.length) v.appendChild(h("div", { class: "grid g4", style: "margin-bottom:18px" }, stats));
     v.appendChild(h("div", { class: "grid g3" }, C.sessions.map((s) => {
@@ -205,8 +210,21 @@
   }
   OH.openRunbook = openRunbook;
 
+  // ── the game's pages: drawn by app/game/game.js into the same view ──
+  function gameView(path) {
+    const v = document.getElementById("view"); v.innerHTML = "";
+    document.getElementById("runbookBtn").hidden = true; closeRunbook();
+    nav("game");
+    try { OH.game.render(v, path); }
+    catch (e) { if (window.console) console.error(e); v.innerHTML = ""; v.appendChild(OH.note("The game could not open. The tools still work: use the links at the top.", "warn")); }
+  }
+
   function route() {
-    const m = /^#\/w(\d+)/.exec(location.hash || "");
+    const hash = location.hash || "";
+    if (OH.game.leave) OH.game.leave();              // stops the game's once-a-second objectives check
+    const g = /^#\/game(?:\/([\w-]*))?$/.exec(hash);
+    if (g && OH.game.render) return gameView(g[1] || "");
+    const m = /^#\/w(\d+)/.exec(hash);
     if (m) moduleView(+m[1]); else home();
   }
 
@@ -215,6 +233,8 @@
     if (name) document.getElementById("bizname").textContent = name;
     const files = ["app/data/runbooks.js"];
     M.modules.forEach((id) => { files.push("app/data/" + id + ".js", "app/modules/" + id + ".js"); });
+    files.push("app/game/game.js");                    // the game comes after the tools it plays; a missing file is skipped
+    M.modules.forEach((id) => { const week = parseInt(id.slice(1), 10); if (week) files.push("app/game/missions/m" + week + ".js"); });
     await Promise.all(files.map(load));
     window.addEventListener("hashchange", route);
     route();
