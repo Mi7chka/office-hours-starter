@@ -23,7 +23,7 @@ If you can read the files in my project folder, read `MODULES.md` first. If you 
 ```js
 (function () {
   const h = OH.h;
-  function render(root, ctx) { /* build the page into root. Call ctx.redraw() after anything changes. */ }
+  function render(root, ctx) { /* build the page into root. Call ctx.redraw() after a tick, a button press or a choice in a list. Never from a text input. */ }
   OH.register({
     piece: 1,
     id: "week-1-today",
@@ -36,21 +36,23 @@ If you can read the files in my project folder, read `MODULES.md` first. If you 
 })();
 ```
 
+`root` is empty each time. The app draws the title, the intro and the Sample business / My business switch above it. Do not draw a heading.
+
 **The toolbox the app gives you. Use it, do not write your own.**
 
-- `OH.h(tag, attrs, ...children)` makes a page element. `attrs` can hold `class`, `style`, `value`, `checked`, `placeholder`, `type`, and handlers such as `onclick` or `onchange`. Children are text, elements, lists, or null.
+- `OH.h(tag, attrs, ...children)` makes a page element. `attrs` can hold `class`, `style`, `value`, `checked`, `placeholder`, `type`, and handlers such as `onclick` or `onchange`. `style` is text such as `"font-weight:700"`, not an object. Children are text, elements, lists, or null.
 - `OH.cc.get(name)` reads data. `OH.cc.set(name, value)` keeps it in this browser. `OH.cc.own()` is true when the person looks at their own business, and false for the sample business.
-- In the sample business, `OH.cc.get(name)` returns made-up sample data that is already in the app. In My business it returns `null` until the person brings their own data in. When it is `null`, show `OH.cc.setup(sentence, [steps])`, which draws a box headed Needs setup. Never show a made-up number in its place.
+- In the sample business, `OH.cc.get(name)` returns made-up sample data that is already in the app. In My business it returns `null` until the person brings their own data in. When it is `null`, show `OH.cc.setup(sentence, [steps])`, which returns the box headed Needs setup. Add it to the page like any other element. Never show a made-up number in its place.
 - `OH.cc.biz()` gives `{ name, owner, town }` for the business on screen. `OH.cc.log(what, why)` adds a line to the change log.
 - `OH.step(title, ...children)` a numbered section. `OH.card(title, ...children)` a card. `OH.note(text, tone)` a note. `OH.badge(text, tone)` a small label. `OH.stat(label, value, detail, tone)` a number tile. Tones: `"ok"`, `"warn"`, `"bad"`, `"blue"`.
-- `OH.check(text, done, onChange, extra)` one line with a tick box. `OH.field(label, inputElement, hint)` a labelled input.
+- `OH.check(text, done, onChange, extra)` one line with a tick box. `onChange(ticked)` gets true or false, not an event. `OH.field(label, inputElement, hint)` a labelled input.
 - `OH.table(columns, rows, options)` a table. `columns`: `[{ h: "Heading", f: (row) => cell }]`. `options`: `{ empty: "words for no rows", rowClass: (row) => "hot" or "done" }`.
 - `OH.tabs(key, [{ id, label, count, render: (panel) => {} }])` tabs inside the piece. It remembers the open tab.
 - `OH.bringIn({ label, hint, placeholder, sample, useLabel, onText: (text, fileName) => {} })` the way to bring data in with no connector: choose a file, drop a file, or paste text. `sample` is optional text for a Load the sample file button.
 - `OH.promptBox({ prompt, data, dataLabel })` returns `{ el }`: a prompt the person copies into an AI chat. `OH.pasteBox({ label, sample, onUse: (text) => {} })` is where the AI's answer comes back.
-- `OH.rows(text)` turns CSV text into a list of objects, keyed by the header row in lower case. `OH.toCSV(listOfRows)` makes CSV text. `OH.download(fileName, text)` saves a file. `OH.copy(text, "What was copied")` copies. `OH.toast(message)` shows a short message.
+- `OH.rows(text)` turns CSV text into a list of objects, keyed by the header row in lower case. `OH.toCSV(rows)` makes CSV text from a list of lists: the first inner list is the headings and each one after it is one row of cells, such as `[["title", "lane"], ["Order mulch", "Doing"]]`. It does not take the objects that `OH.rows` gives back. `OH.download(fileName, text)` saves a file. `OH.copy(text, "What was copied")` copies. `OH.toast(message)` shows a short message.
 - `OH.today()` is today as `"2026-10-07"`. `OH.day(n)` is today plus n days. `OH.daysBetween(from, to)` counts days. `OH.niceDate(date)` reads like `Wed, Oct 7`.
-- CSS classes already there: `grid g2 g3 g4`, `row`, `spacer`, `card`, `mut` (grey text), `piles` with `pile` and `item` (columns of cards), `first` (a card with a blue edge), and buttons `primary` and `small`.
+- CSS classes already there: `steps` (put the whole page inside one `div` with this class: it spaces the cards apart and numbers each `OH.step` 1, 2, 3), `grid g2 g3 g4`, `row`, `spacer`, `card`, `mut` (grey text), `piles` with `pile` and `item` (columns of cards), `first` (a card with a blue edge; a `div` with the class `big` inside it holds large text), and buttons `primary` and `small`.
 
 **Rules for the page**
 
@@ -93,12 +95,12 @@ Build the Today page as the file `week-1-today.js`.
 
 **The page, top to bottom**
 
-1. A card with today's date written out (weekday, month, day), a greeting that uses the owner's first name when there is one, and the business name.
+1. A card with today's date written out with `OH.niceDate(OH.today())`, a greeting that uses the owner's first name when there is one, and the business name.
 2. If `OH.cc.get("today")` is `null`: the Needs setup box, saying what to do. Otherwise the next three.
 3. If the saved date is not today, a note that says which day the list is from.
 4. A card with the classes `card first`, headed First, holding the one thing first with a tick box.
 5. A card headed Then with the rest of the list, each line with a tick box, and a count such as `2 of 5 done`. The count includes the first thing.
-6. A section headed Write today's list. In My business it has two text inputs: the name of the business, and the owner's first name. It always has a text box with one thing per line, where the first line is the one thing first, and a button Save today's list. It keeps at most six lines: the first, and five more. Saving sets the date to today and clears the ticks. The box starts filled with the list that is saved.
+6. A section headed Write today's list. In My business it has two text inputs: the name of the business, and the owner's first name. Save those two names when Save today's list is pressed, even when the text box is empty. Do not save or redraw while the person types in them. It always has a text box with one thing per line, where the first line is the one thing first, and a button Save today's list. It keeps at most six lines: the first, and five more. Saving sets the date to today and clears the ticks. The box starts filled with the list that is saved.
 7. A section headed Where the business stands, with one tile per other piece from `OH.pieceSummaries()`: the label and the value when it is built, and the words Not built yet with its week when it is not.
 
 **The home screen number**

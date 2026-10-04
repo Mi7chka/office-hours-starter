@@ -10,12 +10,12 @@ Build the Today page as the file `week-1-today.js`.
 
 **The page, top to bottom**
 
-1. A card with today's date written out (weekday, month, day), a greeting that uses the owner's first name when there is one, and the business name.
+1. A card with today's date written out with `OH.niceDate(OH.today())`, a greeting that uses the owner's first name when there is one, and the business name.
 2. If `OH.cc.get("today")` is `null`: the Needs setup box, saying what to do. Otherwise the next three.
 3. If the saved date is not today, a note that says which day the list is from.
 4. A card with the classes `card first`, headed First, holding the one thing first with a tick box.
 5. A card headed Then with the rest of the list, each line with a tick box, and a count such as `2 of 5 done`. The count includes the first thing.
-6. A section headed Write today's list. In My business it has two text inputs: the name of the business, and the owner's first name. It always has a text box with one thing per line, where the first line is the one thing first, and a button Save today's list. It keeps at most six lines: the first, and five more. Saving sets the date to today and clears the ticks. The box starts filled with the list that is saved.
+6. A section headed Write today's list. In My business it has two text inputs: the name of the business, and the owner's first name. Save those two names when Save today's list is pressed, even when the text box is empty. Do not save or redraw while the person types in them. It always has a text box with one thing per line, where the first line is the one thing first, and a button Save today's list. It keeps at most six lines: the first, and five more. Saving sets the date to today and clears the ticks. The box starts filled with the list that is saved.
 7. A section headed Where the business stands, with one tile per other piece from `OH.pieceSummaries()`: the label and the value when it is built, and the words Not built yet with its week when it is not.
 
 **The home screen number**
