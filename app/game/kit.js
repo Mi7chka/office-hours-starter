@@ -16,6 +16,12 @@
   const speed = () => Math.max(0.1, Number(G.speed) || 1);            // for testing: OH.game.speed = 6 plays everything six times faster
   const ease = (p) => (p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2);
   const BIN_COLORS = [A.C.red, A.C.sun, A.C.blue, A.C.purple, A.C.green, A.C.orange];
+  /* kit.fx.pop and kit.fx.shake, frame for frame the same as the keyframes sg-pop and sg-shake in game.css. */
+  const frames = (easing, list) => list.map((f) => ({ offset: f[0], transform: f[1], easing: easing }));
+  const EFFECTS = {
+    "sg-pop": { ms: 320, frames: frames("cubic-bezier(.2,1.4,.4,1)", [[0, "scale(.72)"], [0.55, "scale(1.1)"], [1, "scale(1)"]]) },
+    "sg-shake": { ms: 380, frames: frames("ease", [[0, "translateX(0)"], [0.2, "translateX(-9px) rotate(-2deg)"], [0.4, "translateX(8px) rotate(2deg)"], [0.6, "translateX(-6px)"], [0.8, "translateX(4px)"], [1, "translateX(0)"]]) }
+  };
 
   G.makeKit = function (stage, hooks) {
     hooks = hooks || {};
@@ -23,6 +29,8 @@
     let dead = false, talk = null, actorsEl = null, bubble = null, actors = {}, layer = null;
     const kit = { stage: stage, h: h, art: A, sound: S, calm: still, mission: hooks.mission || null, week: hooks.week || 0 };
     const root = () => stage.closest(".sg") || stage;
+    const playing = new WeakMap();                                      // the pop or shake now running on an element (see kit.fx)
+    const stopEffect = (el) => { const a = playing.get(el); if (a) { playing.delete(el); try { a.cancel(); } catch (e) { /* already over */ } } };
 
     // ── time ──
     kit.onCleanup = (fn) => { offs.push(fn); };
@@ -67,10 +75,17 @@
       const modals = root().querySelectorAll(".sg-modal"), scope = modals.length ? modals[modals.length - 1] : root();
       return Array.prototype.filter.call(scope.querySelectorAll("button:not([disabled]), a[href], input"), (n) => n.getClientRects().length > 0);
     }
+    /* Nothing has the focus (a button was switched off under it): start again inside what the player
+       is looking at, the panel if one is up, else the stage, and only then the HUD. */
+    function home(list, dir) {
+      const panels = stage.querySelectorAll(".sg-layer"), scopes = [panels.length ? panels[panels.length - 1] : null, stage];
+      for (let s = 0; s < scopes.length; s++) { const inside = scopes[s] ? list.filter((n) => scopes[s].contains(n)) : []; if (inside.length) return inside[dir > 0 ? 0 : inside.length - 1]; }
+      return list[dir > 0 ? 0 : list.length - 1];
+    }
     function rove(dir) {
       const list = focusables(); if (!list.length) return;
       const i = list.indexOf(document.activeElement);
-      (list[i < 0 ? (dir > 0 ? 0 : list.length - 1) : (i + dir + list.length) % list.length]).focus();
+      (i < 0 ? home(list, dir) : list[(i + dir + list.length) % list.length]).focus();
     }
     kit.on(window, "keydown", (ev) => {
       if (dead || ev.metaKey || ev.ctrlKey || ev.altKey) return;
@@ -85,6 +100,13 @@
       if (/^Arrow/.test(key)) { rove(key === "ArrowRight" || key === "ArrowDown" ? 1 : -1); ev.preventDefault(); }
     });
     kit.focus = (el) => { if (el && el.focus) try { el.focus({ preventScroll: true }); } catch (e) { /* an old browser */ } };
+    /* list[from] was just switched off. If the focus was on it (or nowhere), move it to the next live
+       button in `list`, so the arrow keys carry on from inside the challenge and not from the HUD. */
+    kit.focusNext = (list, from) => {
+      const had = document.activeElement, n = list.length;
+      if (had && had !== document.body && had !== list[from] && !had.disabled && had.isConnected) return;   // the focus is on something live: leave it there
+      for (let i = 1; i <= n; i++) { const b = list[(from + i) % n]; if (b && !b.disabled && b.isConnected) return kit.focus(b); }
+    };
     /* Drag `el` with a mouse or a finger. zones: elements it can be dropped on (or a function that
        returns them). onDrop(zone or null, el): return true to keep el where it was let go; anything
        else sends it back where it started. The zone under the pointer gets the class sg-over. */
@@ -103,7 +125,7 @@
         if (!start || ev.pointerId !== start.id) return;
         const dx = ev.clientX - start.x, dy = ev.clientY - start.y;
         if (!start.moved && Math.abs(dx) + Math.abs(dy) < 6) return;
-        if (!start.moved) { start.moved = true; el.classList.add("sg-dragging"); if (o.onStart) o.onStart(el); }
+        if (!start.moved) { start.moved = true; stopEffect(el); el.classList.add("sg-dragging"); if (o.onStart) o.onStart(el); }
         el.style.transition = "none"; el.style.transform = "translate(" + dx + "px," + dy + "px) rotate(" + Math.max(-8, Math.min(8, dx / 18)) + "deg)";
         setOver(hit(ev.clientX, ev.clientY));
       });
@@ -121,9 +143,20 @@
     };
 
     // ── effects ──
+    /* pop and shake. The class goes on as before (game.css animates it, and a mission may style it).
+       The effect is also played as a script animation, which sits above every CSS animation: so it
+       shows even on an element whose own class sets `animation`, and that animation carries on
+       afterwards. With reduced motion only the class is set, and game.css makes that instant. */
+    function effect(el, name) {
+      if (!el) return;
+      el.classList.remove(name); void el.offsetWidth; el.classList.add(name);
+      stopEffect(el);
+      if (still || typeof el.animate !== "function") return;
+      try { playing.set(el, el.animate(EFFECTS[name].frames, { duration: EFFECTS[name].ms })); } catch (e) { /* the class alone will do */ }
+    }
     kit.fx = {
-      pop: (el) => { if (!el) return; el.classList.remove("sg-pop"); void el.offsetWidth; el.classList.add("sg-pop"); },
-      shake: (el) => { if (!el) return; el.classList.remove("sg-shake"); void el.offsetWidth; el.classList.add("sg-shake"); },
+      pop: (el) => effect(el, "sg-pop"),
+      shake: (el) => effect(el, "sg-shake"),
       confetti: (n) => {
         if (still) return;
         const colors = [A.C.red, A.C.sun, A.C.blue, A.C.green, A.C.pink, A.C.purple, A.C.orange], box = h("div", { class: "sg-confetti", "aria-hidden": "true" });
@@ -133,6 +166,7 @@
       /* Send el flying into `to` (an element), shrinking as it goes, then call done. */
       fly: (el, to, done) => {
         if (still || !el || !to) { if (done) done(); return; }
+        stopEffect(el);
         const a = el.getBoundingClientRect(), b = to.getBoundingClientRect();
         el.style.transition = "transform .34s cubic-bezier(.5,-.2,.8,.6), opacity .34s"; el.style.transform = "translate(" + (b.left + b.width / 2 - a.left - a.width / 2) + "px," + (b.top + b.height / 2 - a.top - a.height / 2) + "px) scale(.15)"; el.style.opacity = "0.2";
         kit.after(340, () => { el.style.transition = ""; el.style.transform = ""; el.style.opacity = ""; if (done) done(); });
@@ -175,10 +209,13 @@
       const draw = () => { act.el.innerHTML = ""; act.el.appendChild(A.character(act.who, { mood: act.mood, pose: act.pose, flip: side === "right" })); };
       act.set = (o) => { if (!o) return act; const m = o.mood === undefined ? act.mood : o.mood, p = o.pose === undefined ? act.pose : o.pose; if (m !== act.mood || p !== act.pose) { act.mood = m; act.pose = p; draw(); } return act; };
       act.hop = () => kit.fx.pop(act.el);
-      draw(); actorsEl.appendChild(act.el); actors[a.who] = act; return act;
+      draw(); actorsEl.appendChild(act.el); actors[a.who] = act; crowd(); return act;
     }
+    /* Two actors is the usual scene. With a third (a speaker who was not on stage is added in the
+       middle), game.css sizes all of them to fit a narrow window. Two-actor scenes are not touched. */
+    function crowd() { const n = actorsEl.children.length; actorsEl.style.setProperty("--n", String(n)); actorsEl.classList.toggle("sg-many", n > 2); }
     /* Put characters on the stage: kit.cast([{who: "jordan", side: "left", mood: "worried"}, "sprout"]) */
-    kit.cast = (list) => { talkLayer(); actorsEl.innerHTML = ""; actors = {}; [].concat(list || []).forEach((a, i, all) => addActor(typeof a === "string" ? { who: a, side: all.length === 1 ? "center" : i === 0 ? "left" : i === 1 ? "right" : "center" } : a)); return actors; };
+    kit.cast = (list) => { talkLayer(); actorsEl.innerHTML = ""; actors = {}; crowd(); [].concat(list || []).forEach((a, i, all) => addActor(typeof a === "string" ? { who: a, side: all.length === 1 ? "center" : i === 0 ? "left" : i === 1 ? "right" : "center" } : a)); return actors; };
     kit.actor = (who, o) => { talkLayer(); return (actors[who] || addActor({ who: who })).set(o); };
     /* Speak the lines one at a time. Each: {who, say, mood, pose}. who: "narrator" has no speaker.
        Text types itself; a tap, Enter or Space finishes the line, then moves on. Returns a Promise. */
@@ -253,7 +290,7 @@
     const opts = spec.options.map((text, k) => h("button", { class: "sg-opt", type: "button", onclick: () => pick(k) }, keycap(k), h("span", null, String(text))));
     function pick(k) {
       const b = opts[k]; if (solved || b.disabled) return;
-      if (k !== spec.answer) { b.classList.add("sg-no"); b.disabled = true; kit.fx.shake(b); kit.score.wrong(); p.say((Array.isArray(spec.nope) ? spec.nope[k] : spec.nope) || "Not that one. Have another go.", "bad"); return; }
+      if (k !== spec.answer) { b.classList.add("sg-no"); b.disabled = true; kit.focusNext(opts, k); kit.fx.shake(b); kit.score.wrong(); p.say((Array.isArray(spec.nope) ? spec.nope[k] : spec.nope) || "Not that one. Have another go.", "bad"); return; }
       solved = true; b.classList.add("sg-yes"); opts.forEach((x) => { if (x !== b) x.disabled = true; }); kit.score.right(); p.say(spec.yes || "That's it.", "ok");
       kit.after(900, () => { p.close(); done(); });
     }
@@ -276,7 +313,7 @@
       if (dropped) { card.style.opacity = "0"; kit.after(160, after); } else kit.fx.fly(card, bins[n], after);
       return true;
     }
-    p.body.appendChild(dots); p.body.appendChild(h("div", { class: "sg-desk" }, card)); p.body.appendChild(h("div", { class: "sg-bins" }, bins));
+    p.body.appendChild(dots); p.body.appendChild(h("div", { class: "sg-desk" }, card)); p.body.appendChild(h("div", { class: "sg-bins" + (bins.length === 5 ? " sg-bins-5" : "") }, bins));
     kit.drag(card, { zones: bins, disabled: () => busy, onDrop: (z) => (z ? send(bins.indexOf(z), true) : false) });
     numberKeys(kit, bins.length, (n) => send(n)); show(); kit.focus(bins[0]);
   };
@@ -290,25 +327,26 @@
     function pick(n) {
       const it = spec.items[n], b = chips[n]; if (b.disabled || got >= need) return;
       b.disabled = true;
-      if (!it.ok) { b.classList.add("sg-no"); kit.fx.shake(b); kit.score.wrong(); p.say(it.why || "Not that one.", "bad"); return; }
+      if (!it.ok) { b.classList.add("sg-no"); kit.focusNext(chips, n); kit.fx.shake(b); kit.score.wrong(); p.say(it.why || "Not that one.", "bad"); return; }
       b.classList.add("sg-yes"); got++; paint(); kit.fx.pop(b); kit.score.right(); p.say(it.why || "", "ok");
-      if (got >= need) kit.after(900, () => { p.close(); done(); });
+      if (got >= need) kit.after(900, () => { p.close(); done(); }); else kit.focusNext(chips, n);
     }
     p.body.appendChild(count); p.body.appendChild(h("div", { class: "sg-chips" }, chips)); paint(); numberKeys(kit, chips.length, pick); kit.focus(chips[0]);
   };
 
-  /* spot: things sorted into groups, one of them in the wrong group. Tap it.
+  /* spot: things sorted into groups, one of them in the wrong group. Tap it, or press its number
+     (the first nine have one, counted group by group).
      {ask, groups: [{label, color, items: [{text, wrong: true, why}]}], nope} */
   C.spot = function (kit, spec, done) {
-    const p = head(kit, spec); let solved = false;
+    const p = head(kit, spec), chips = [], items = []; let solved = false;
     const groups = spec.groups.map((g, n) => h("div", { class: "sg-shelf", style: "--c:" + (g.color || BIN_COLORS[(n + 2) % BIN_COLORS.length]) }, h("b", null, g.label),
-      g.items.map((it) => { const b = h("button", { class: "sg-chip", type: "button", onclick: () => pick(it, b) }, h("span", null, it.text)); return b; })));
-    function pick(it, b) {
-      if (solved || b.disabled) return;
-      if (!it.wrong) { b.classList.add("sg-okay"); b.disabled = true; kit.fx.shake(b); kit.score.wrong(); p.say(it.why || spec.nope || "That one is in the right place. Look again.", "bad"); return; }
+      g.items.map((it) => { const k = chips.length, b = h("button", { class: "sg-chip", type: "button", onclick: () => pick(k) }, k < 9 ? keycap(k) : null, h("span", null, it.text)); chips.push(b); items.push(it); return b; })));
+    function pick(k) {
+      const it = items[k], b = chips[k]; if (solved || !b || b.disabled) return;
+      if (!it.wrong) { b.classList.add("sg-okay"); b.disabled = true; kit.focusNext(chips, k); kit.fx.shake(b); kit.score.wrong(); p.say(it.why || spec.nope || "That one is in the right place. Look again.", "bad"); return; }
       solved = true; b.classList.add("sg-found"); kit.fx.pop(b); kit.score.right(); p.say(it.why || "Found it.", "ok");
       kit.after(1300, () => { p.close(); done(); });
     }
-    p.body.appendChild(h("div", { class: "sg-shelves" }, groups)); kit.focus(p.body.querySelector("button"));
+    p.body.appendChild(h("div", { class: "sg-shelves" }, groups)); numberKeys(kit, chips.length, pick); kit.focus(chips[0]);
   };
 })();

@@ -145,7 +145,7 @@
 
   // ── the game (optional): the files in app/game/ build on this, each mission file adds one case. See GAME.md. ──
   OH.game = { missions: {}, mission: function (data) { if (data && data.week) OH.game.missions[data.week] = data; } };
-  const GAME_FILES = ["art", "sound", "kit", "game", "fallback"];   // in this order: the pictures, the sound, the toolbox, the engine, the stand-in for old-format missions
+  const GAME_FILES = ["art", "sound", "kit", "game"];   // in this order: the pictures, the sound, the toolbox, the engine
 
   function load(src) {                                // async=false: fetched together, run in the order added
     return new Promise((res) => { const s = document.createElement("script"); s.src = src; s.async = false; s.onload = res; s.onerror = res; document.body.appendChild(s); });

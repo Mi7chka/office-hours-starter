@@ -7,8 +7,7 @@
      #/game/done   the finale: the town in color, the bandits in the net, the certificate
 
    The files:  art.js draws everything · sound.js makes every sound · kit.js is the toolbox a screen
-   or a mini-game is handed · this file runs the story · fallback.js plays a mission file that is
-   still in the old format · missions/mN.js is one case each.
+   or a mini-game is handed · this file runs the story · missions/mN.js is one case each.
    Everything saved sits under "game:" keys in OH.store, in this browser only.
    GAME.md is the guide for mission authors. */
 (function () {
@@ -48,11 +47,11 @@
   const raw = (G.missions = G.missions || {}), cache = {};
   /* A mission file calls this once. */
   G.mission = function (data) { if (data && WEEKS.indexOf(+data.week) >= 0) { raw[+data.week] = data; delete cache[+data.week]; } };
-  /* The mission, with the story bible's defaults filled in. An old-format file goes through fallback.js. */
+  /* The mission, with the story bible's defaults filled in. A file with no stops or no showdown is
+     not a case: it shows on the map as one that has not arrived yet. */
   function mission(w) {
     if (cache[w]) return cache[w];
-    let m = raw[w]; if (!m) return null;
-    if (!Array.isArray(m.stops)) m = G.adapt ? G.adapt(m) : null;
+    const m = raw[w];
     if (!m || !Array.isArray(m.stops) || !m.showdown) return null;
     const b = BANDITS[w] || BANDITS[1], r = m.reward || {};
     return (cache[w] = Object.assign({ bandit: b.key, zone: b.zone, maxWrong: 3 }, m, { week: w,
@@ -66,11 +65,11 @@
   const rank = (n) => (n >= 8 ? "Greenline's hero" : n === 7 ? OWNER + "'s right hand" : n >= 5 ? "Senior detective" : n >= 3 ? "Detective" : n >= 1 ? "Junior detective" : "Rookie detective");
 
   // ── the story meters: made-up numbers for a made-up company, always labelled as story numbers ──
-  const dollars = (n) => "$" + whole(n).toLocaleString("en-US");
+  const count = (n) => whole(n).toLocaleString("en-US");              // 8,775: no dollar sign. The label says dollars.
   const METERS = [
     { key: "hours", label: "Hours of busywork saved each week", icon: "clock", fmt: String, gain: (n) => "+" + n + (n === 1 ? " hour" : " hours") + " of busywork saved each week" },
     { key: "leads", label: "Leads answered", icon: "chat", fmt: String, gain: (n) => "+" + n + (n === 1 ? " lead answered" : " leads answered") },
-    { key: "money", label: "Dollars found", icon: "coins", fmt: dollars, gain: (n) => "+" + dollars(n) + " found" }
+    { key: "money", label: "Dollars found", icon: "coins", fmt: count, gain: (n) => "+" + count(n) + (n === 1 ? " dollar found" : " dollars found") }
   ];
   function totals(st) { const t = { hours: 0, leads: 0, money: 0 }; WEEKS.forEach((w) => { const m = st.done[w] && mission(w); if (m) METERS.forEach((x) => { t[x.key] += m.reward[x.key]; }); }); return t; }
   const gains = (m) => METERS.filter((x) => m.reward[x.key] > 0).map((x) => x.gain(m.reward[x.key]));
@@ -118,7 +117,7 @@
     kit = G.makeKit(stage, { week: w, mission: w ? mission(w) : null,
       wrong: () => { if (w) setRun(w, { wrong: getRun(w).wrong + 1 }); },
       sprout: (first) => { if (w && getRun(w).sprout === null) setRun(w, { sprout: first }); },
-      timer: (text) => { if (hudTimer) { hudTimer.textContent = text; hudTimer.hidden = !text; } } });
+      timer: (text) => { if (hudTimer) { hudTimer.textContent = text; hudTimer.hidden = !text; hud.classList.toggle("sg-timing", !!text); } } });
     drawHud(o);
     return kit;
   }
@@ -387,7 +386,7 @@
       h("span", { class: "sg-pickart", style: "background:" + (card.color || [A.C.pink, A.C.sun, A.C.teal][n % 3]) }, card.art ? A.svg(card.art, { box: card.box || "0 0 120 120" }) : A.icon(card.icon || "star")), h("b", null, card.title), h("span", null, card.text)));
     function pick(n) {
       const card = c.cards[n], b = cards[n]; if (solved || b.disabled) return;
-      if (!card.right) { b.disabled = true; b.classList.add("sg-no"); k.fx.shake(b); k.score.wrong(); return react(card.react || { say: "Not that one. Try another." }, "bad"); }
+      if (!card.right) { b.disabled = true; b.classList.add("sg-no"); k.focusNext(cards, n); k.fx.shake(b); k.score.wrong(); return react(card.react || { say: "Not that one. Try another." }, "bad"); }
       solved = true; b.classList.add("sg-yes"); cards.forEach((x) => { if (x !== b) x.disabled = true; }); k.score.right();
       b.appendChild(h("span", { class: "sg-stamp" }, "Cracked!"));
       const on = btn("To the showdown", () => { setRun(w, { phase: "showdown" }); showdownIntro(w); }, "sg-primary", "bolt");

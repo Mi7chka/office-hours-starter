@@ -11,7 +11,7 @@ Contents: [the story bible](#1-the-story-bible) · [the files](#2-the-files) ·
 [a mission file](#3-a-mission-file) · [the quick challenges](#4-the-quick-challenges) ·
 [writing a showdown](#5-writing-a-showdown) · [the kit](#6-the-kit-everything-a-mini-game-is-given) ·
 [the art](#7-the-art) · [the sound](#8-the-sound) · [rules for the words](#9-rules-for-the-words) ·
-[testing a mission](#10-testing-a-mission) · [the old format](#11-missions-still-in-the-old-format) ·
+[testing a mission](#10-testing-a-mission) · [known limits](#11-known-limits) ·
 [saving, the starter copy, the apps](#12-saving-the-starter-copy-the-apps)
 
 ---
@@ -44,6 +44,15 @@ Keep to it, so all eight missions feel like one game.
   player has to catch. The line that sums it up: "Sprout drafts. You decide."
 - **The townspeople**: Dana, Bea, Mayor Maple, Nell, Penny and Gus, one at each place. Each one gives
   a clue. They are warm, a little funny, and each knows one thing about working with a helper.
+  A townsperson is met at their own place, with one exception: while a bandit holds that place, a
+  case may move them next door, and their first line says why. Case 5 does it (Blank Page is in Print
+  and Post, so Nell pins her notices in Town Square) and so does case 8 (Captain Chaos has the
+  Workshop, so Gus waits in Hollow Park). Cases 2 and 3 keep Bea and the mayor at home, in the gray.
+- **Who they are, so every case agrees.** Dana Whitfield grows things, and is also a Greenline
+  customer (the hedge trim nobody showed up for). Bea runs the coffee shop: cocoa, cups, a till.
+  Mayor Maple looks after Town Square, its billboard and the map kiosk. Nell prints and posts: flyers,
+  parcels, the big printer. Penny guards the vault at the bank. Gus builds and fixes machines, and
+  minds the sawdust.
 - Customers named in the sample data (Priya, Marcus, Tomas and the rest) can be talked about.
   Nobody outside this list gets a face unless a mission draws one (section 7).
 
@@ -91,7 +100,8 @@ loose (in case 1 that is HQ, from the briefing to the catch). A gray scene is no
 
 The best result is kept. A case can be played again. The story meters (hours of busywork saved each
 week, leads answered, dollars found) add up from each mission's `reward`, and are always labelled
-as story numbers for a made-up company. A bonus sticker, "Did it for real", appears in the case
+as story numbers for a made-up company. Money is a plain number with the word in the label: "8,775"
+under "Dollars found", never a dollar sign. A bonus sticker, "Did it for real", appears in the case
 book when the week's tool reports its required `objectives()` done. That is the only thing the game
 reads from a tool, and it is read only.
 
@@ -113,7 +123,6 @@ emoji, no libraries, no network.
 | `app/game/sound.js` | Every sound: the tune and the effects, made with the Web Audio API |
 | `app/game/kit.js` | The toolbox a screen or a mini-game is given, and the four built-in quick challenges |
 | `app/game/game.js` | The engine: entrance, town map, the case flow, scoring, saving, the case book, the finale |
-| `app/game/fallback.js` | Plays a mission file that is still in the old format (section 11) |
 | `app/game/game.css` | The look. Every class starts with `sg-` |
 | `app/game/missions/mN.js` | One case. **The only file a mission author writes** |
 
@@ -276,7 +285,7 @@ mouse, touch and keys, and counts wrong picks for you. `ask` is the one-line ins
 
 ```js
 { type: "sort", ask: "...",
-  bins: [{ key: "a", label: "...", icon: "bolt", color: A.C.green }, { key: "b", label: "..." }],   // two to four
+  bins: [{ key: "a", label: "...", icon: "bolt", color: A.C.green }, { key: "b", label: "..." }],   // two to five
   items: [{ text: "...", bin: "a", why: "one line, shown for a right or a wrong pick" }] }
 // bin may be a list, ["a", "b"], when more than one basket is a fair answer
 ```
@@ -287,7 +296,8 @@ mouse, touch and keys, and counts wrong picks for you. `ask` is the one-line ins
 { type: "tap", ask: "Tap the five things ...", items: [{ text: "...", ok: true, why: "..." }, { text: "...", ok: false, why: "..." }] }
 ```
 
-**`spot`**: things already sorted into groups, exactly one in the wrong group. Tap it.
+**`spot`**: things already sorted into groups, exactly one in the wrong group. Tap it, or press its
+number (the first nine are numbered, group by group).
 
 ```js
 { type: "spot", ask: "...", nope: "said for a wrong tap",
@@ -301,6 +311,9 @@ and `done()` when it is solved. To share a new type with other missions, add it 
 
 Use at least two different types across the three stops. A challenge practises the clue it earns:
 the player should feel the idea in their hands before they read it.
+
+All four keep the keyboard inside the challenge: when a wrong pick switches a button off, the focus
+moves to the next live one. In a challenge of your own, do the same with `kit.focusNext` (section 6).
 
 ---
 
@@ -379,9 +392,10 @@ kit of the screen they are on.
 | | |
 |---|---|
 | `kit.keys(map)` | `{"1": fn, Enter: fn, ArrowLeft: fn, any: fn}`. The newest map wins. Enter and Space are left to a focused button. Arrow keys nobody claims move the focus between buttons. Returns a function that removes the map. |
-| `kit.drag(el, opts)` | Drag with a mouse or a finger. `zones`: the elements it can be dropped on (or a function returning them). `onDrop(zone or null, el)`: return `true` to keep the element where it was let go; anything else sends it back. `onOver(zone)`, `onStart(el)`, `disabled()`. The zone under the pointer gets the class `sg-over`. |
+| `kit.drag(el, opts)` | Drag with a mouse or a finger. `zones`: the elements it can be dropped on (or a function returning them). `onDrop(zone or null, el)`: return `true` to keep the element where it was let go; anything else sends it back. `onOver(zone)`, `onStart(el)`, `disabled()`. The zone under the pointer gets the class `sg-over`, and the element has the class `sg-dragging` while it moves: a lifted look, with a shadow that follows its shape. |
 | `kit.on(target, type, fn)` | `addEventListener` that is removed with the screen. |
 | `kit.focus(el)` | Move the keyboard focus. Do it whenever a new set of buttons appears. |
+| `kit.focusNext(list, n)` | You have just disabled `list[n]`: if the focus was on it, it moves to the next live button in `list`. Call it right after a wrong pick, so the arrow keys carry on from inside your game. |
 
 A tap is a `<button>` with `onclick`. Buttons are focusable and work with Enter, so use real buttons.
 
@@ -392,7 +406,7 @@ A tap is a `<button>` with `onclick`. Buttons are focusable and work with Enter,
 | `kit.backdrop(place, {gray})` | A place's scene behind everything. Or pass an `<svg>` of your own. Returns the element. |
 | `kit.cast(list)` | Put characters on stage: `["jordan", "sprout"]` or `[{who, side: "left" / "right" / "center", mood, pose}]`. `kit.cast([])` clears them. |
 | `kit.actor(who, {mood, pose})` | Change one actor (it is added if it is not on stage). Returns `{el, set(), hop()}`. |
-| `kit.say(lines)` | Speak the lines one at a time. The text types itself; a tap, Enter or Space finishes the line, then moves on. Returns a Promise. |
+| `kit.say(lines)` | Speak the lines one at a time. The text types itself; a tap, Enter or Space finishes the line, then moves on. Returns a Promise. A speaker who is not on stage walks on in the middle; with three or more on stage the whole cast shrinks to fit a phone. |
 | `kit.choose(options)` | Buttons under the last line: `[{label, value, icon}]`. Resolves with the value. |
 | `kit.hush()` | Hide the speech bubble. |
 | `kit.panel({kicker, title, who, class})` | A card in the middle of the stage. Returns `{el, body, foot, say(text, tone), close()}`. `tone` is `"ok"` or `"bad"`. `class: "sg-wide"` for a wide one. |
@@ -407,7 +421,7 @@ for `kit.score.right()`, oops for `kit.score.wrong()`.
 
 | | |
 |---|---|
-| `kit.fx.pop(el)`, `kit.fx.shake(el)` | A bounce in. A "no" wobble. |
+| `kit.fx.pop(el)`, `kit.fx.shake(el)` | A bounce in. A "no" wobble. They show on any element, including one whose own class sets `animation`, and that animation carries on afterwards. |
 | `kit.fx.fly(el, target, done)` | Send an element flying into another, shrinking as it goes. |
 | `kit.fx.confetti(n)` | Confetti over the whole screen. |
 
@@ -542,6 +556,8 @@ after the catch.
   statistics. No prices. No client or employer names.
 - **Greenline and everyone in it are made up.** Never write a number as if a real business got it.
   Numbers from the sample data are fine; the meters are always labelled as story numbers.
+- **Money is a number and the word.** "8,775 dollars", or "8,775" under a label that says dollars.
+  No dollar sign anywhere in the game, the same as the week 7 tool.
 - A wrong pick is never the player's fault. The reaction is funny or helpful, never a telling-off,
   and it says why in one line.
 - Sprout is never stupid and never mean. Sprout is fast, keen, sure of itself, and wrong about one
@@ -583,22 +599,86 @@ location.hash = "#/game/m2"                        // straight to a case that is
 
 ---
 
-## 11. Missions still in the old format
+## 11. Known limits
 
-A mission file with `scene`, `stakes`, `quiz` and `debrief` and no `stops` is in the old format.
-`app/game/fallback.js` turns it into a playable case so the game is never broken while the others
-are rewritten:
+Things the engine does not do for you. Every one has a workaround that a case already uses.
 
-- its `scene` becomes the briefing (told by a narrator, with its `stakes` as Jordan's line);
-- its three `quiz` questions become three clue stops: a townsperson asks, the options are a `pick`
-  challenge, and the question's `why` is the clue;
-- there is no "crack the case" step;
-- a short generic showdown stands in: tag the bandit five times as it pops out of the bushes, then
-  find the one case note Sprout got wrong (one of the three questions, answered wrongly).
+**Time and speed**
 
-To rewrite one, replace the whole file with the new format. When all eight have `stops` and a
-showdown of their own, delete `fallback.js` and remove `"fallback"` from `GAME_FILES` in
-`app/shell.js`. Nothing in `fallback.js` is a model for a new mission.
+- **`OH.game.speed` reaches only what the kit times**: `kit.after`, `kit.every`, `kit.wait`,
+  `kit.tween` and `kit.timer`. **`kit.frame` runs in real time**, and so does every CSS transition
+  and animation. A game loop that should speed up in testing multiplies by the speed itself, once,
+  at the top of `play`: `const rate = Math.max(0.1, Number(OH.game.speed) || 1)`, then `dt * rate`
+  (cases 2 and 7), or a CSS duration of `(3 / rate) + "s"` (case 3).
+- `kit.fx.fly` always takes 0.34 seconds. Its `done` comes from `kit.after`, so at a high test
+  speed the callback arrives before the flight has finished. Nothing may depend on where the
+  element is when `done` runs.
+- With reduced motion `kit.tween` jumps to its end, `kit.fx.fly` and `kit.fx.confetti` are skipped,
+  and CSS animations finish at once. `kit.frame` still runs: check `kit.calm` yourself (case 6
+  stops its balloons, case 7 lays the belt out as a still grid).
+
+**Dragging**
+
+- **`kit.drag` does not report how far the element was dragged.** `onDrop(zone, el)` gets the zone
+  (or `null`) and nothing else. The element still carries its drag as an inline
+  `transform: translate(Xpx, Ypx) rotate(...)` while `onDrop` runs, so read the distance from
+  `el.style.transform` there (case 5 pulls its weed this way), or measure with
+  `el.getBoundingClientRect()` (case 2). The transform is cleared as soon as `onDrop` returns
+  anything but `true`.
+- A drag is the pointer's job only. There is no keyboard drag, so every drag needs a tap and a key.
+- A zone is hit when the pointer is inside its box, not when the dragged element overlaps it.
+- `sg-dragging` sets `box-shadow: none` and a `filter: drop-shadow(...)`. An element that needs its
+  own filter while it is dragged sets it in a rule of its own: `.m5-seed.sg-dragging{filter:...}`.
+
+**Effects and styles**
+
+- `kit.fx.pop` and `kit.fx.shake` leave their class (`sg-pop`, `sg-shake`) on the element. That is
+  harmless, but do not use either class to mean anything else.
+- An effect animates `transform`. For as long as it plays (a third of a second) it replaces a
+  `transform` the element has from CSS or from an inline style, the same as any CSS animation would.
+  Position a thing that gets popped or shaken with `left`, `top`, `translate` or `rotate`, or put the
+  effect on a wrapper.
+- A mission's CSS comes after the engine's, so at equal specificity the mission wins. `.sg button`
+  sets the font and the color of every button: style a button's lettering as `.sg .m2-thing`.
+- `kit.style` belongs to one screen. The briefing, each clue stop and the showdown each get a new
+  kit, so each one that needs your CSS calls `kit.style(CSS)` again (in `setup`, or at the top of
+  `play`).
+- What a mission adds to `A.icons`, `A.props`, `A.cast`, `A.places` and `S.fx` is never removed.
+  Prefix the names (`m2flag`, `m8key`) so two cases cannot collide.
+
+**Keys and focus**
+
+- The number keys are 1 to 9. A tenth choice has no key.
+- `kit.keys({Enter: fn})` does not fire while a button has the focus: Enter and Space belong to the
+  focused button. For one big button that is fine (focus it). If the focus may have been lost,
+  give the button an `onclick` and the same function in the key map (cases 2 and 3).
+- A map that claims an arrow key (cases 2 and 7) switches off the engine's own arrow-key roving for
+  that key, while the map is on.
+- A disabled button cannot hold the focus. After you disable the one the player just pressed, call
+  `kit.focusNext(list, n)` or `kit.focus(...)`, or the next arrow key starts again from the first
+  button on the stage.
+
+**The stage and the HUD**
+
+- The HUD is 56 pixels tall and the stage is everything under it. In a narrow window the case title
+  takes two lines, and while a `kit.timer` clock is showing the three clue pips step aside for it.
+  Every title of 34 characters or fewer reads in full down to 360 pixels wide. Narrower than that, a
+  long title is cut off after its third line.
+- `kit.say` puts a third speaker in the middle and shrinks the cast to fit. Four or more fit too,
+  but they get small: a talking scene reads best with two.
+- A scene is cropped to fill the stage. Keep what matters between x = 250 and x = 550 of its 800.
+- The built-in `sort` lays out two to five baskets (five across, or three over two in a narrow
+  window). Six or more wrap wherever they fall.
+
+**Saving**
+
+- A case is saved by step: briefing, clue stops (which ones are found), crack the case, showdown.
+  **Leaving in the middle of the showdown starts the showdown again** from its versus card. Wrong
+  picks made before leaving still count.
+- Leaving while a clue card is flying to the case book (a third of a second) loses that clue: the
+  stop is played again.
+- `kit.score.sprout` keeps the first call only, and the answer is saved with the case. A showdown
+  that is started again after leaving halfway keeps the answer from the first time through.
 
 ---
 
