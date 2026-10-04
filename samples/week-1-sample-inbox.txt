@@ -1,0 +1,63 @@
+SAMPLE DATA. A made-up inbox for a made-up company (Greenline Landscaping). No real people.
+Used in Wednesday Office Hours, Session 1. Copy everything below the line into the AI chat, under the prompt.
+------------------------------------------------------------------------------------------------
+
+EMAIL 1
+From: Dana Whitfield <dana.whitfield@example.com>
+Subject: Nobody showed up on Tuesday
+Hi, your crew was supposed to be here Tuesday morning for the hedge trimming and nobody came or called. I took the morning off work for this. Please tell me what happened and when you can come. I'd like this sorted this week.
+
+EMAIL 2
+From: Website form <forms@greenline-sample.example.com>
+Subject: New quote request: backyard patio
+Name: Marcus Oyelaran. Phone: 555-0142. Message: We just bought a house and want a paver patio in the backyard, roughly 300 square feet, plus some planting along the fence. Can someone come look at it? Weekends are best.
+
+EMAIL 3
+From: Priya Raman <priya.raman@example.com>
+Subject: Can we move Friday?
+Hi! We have family arriving Friday. Any chance the lawn visit could move to Thursday or to Monday instead? Either works for us. Thanks so much.
+
+EMAIL 4
+From: Northside Mulch Supply <billing@northside-mulch.example.com>
+Subject: Invoice 4471 for September delivery
+Please find attached invoice 4471 for 18 cubic yards of dark hardwood mulch delivered September 22. Terms are net 30.
+
+EMAIL 5
+From: Square <no-reply@square.example.com>
+Subject: You received a payment
+A payment from T. Alvarez was completed. View the details in your dashboard.
+
+EMAIL 6
+From: Account Security <security-alert@acc0unt-verify.example.net>
+Subject: URGENT: Your account is suspended
+We detected unusual activity. Your business account has been suspended. Click here within 24 hours to verify your password and card number or your account will be closed.
+
+EMAIL 7
+From: Google Business Profile <noreply@business-profile.example.com>
+Subject: You have a new review
+Sam K. left a 5-star review: "Showed up on time, yard looks great, fair price."
+
+EMAIL 8
+From: Luis (crew lead) <luis@greenline-sample.example.com>
+Subject: Thursday off?
+Hey boss, my daughter has a school thing Thursday afternoon. OK if I leave at 1? I can cover Saturday morning to make it up. Also the trailer hitch light is out again.
+
+EMAIL 9
+From: Harbor Mutual Insurance <renewals@harbor-mutual.example.com>
+Subject: Your commercial auto policy renews next month
+Your policy renews on the 15th of next month. Review your vehicles and drivers and let your agent know of any changes.
+
+EMAIL 10
+From: The Small Biz Weekly <newsletter@smallbizweekly.example.com>
+Subject: 7 trends every owner should watch this fall
+This week: seven trends, three podcasts and one webinar you won't want to miss.
+
+EMAIL 11
+From: QuickBooks <no-reply@quickbooks.example.com>
+Subject: 3 invoices are overdue
+Three of your customer invoices are more than 30 days overdue. Open your account to send reminders.
+
+EMAIL 12
+From: ToolBarn Deals <deals@toolbarn.example.com>
+Subject: 20% off trimmers this weekend only
+Our biggest sale of the season. This weekend only.
