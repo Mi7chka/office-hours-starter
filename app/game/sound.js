@@ -80,7 +80,13 @@
     caught: () => { run([N.C5, N.C5, N.C5, N.E5, N.G5, N.E5, N.G5], 0.11, { type: "square", vol: 0.07 }); S.tone(N.C6, 0.6, { type: "square", vol: 0.08, at: 0.8 }); S.tone(N.E5, 0.6, { vol: 0.12, at: 0.8 }); S.tone(N.G5, 0.6, { vol: 0.1, at: 0.8 }); },
     color: () => { S.noise(0.5, { from: 300, to: 5000, vol: 0.08 }); run([N.C5, N.D5, N.E5, N.G5, N.A5, N.C6], 0.05, { vol: 0.1 }); },
     tick: () => S.tone(1200, 0.03, { type: "square", vol: 0.03 }),
-    zip: () => S.tone(300, 0.07, { to: 1500, type: "square", vol: 0.04 })
+    zip: () => S.tone(300, 0.07, { to: 1500, type: "square", vol: 0.04 }),
+    // Agent Mode: logging in, the boot lines, a skill gain, a level, the owner's stamp
+    login: () => run([N.G4, N.C5, N.E5, N.G5], 0.06, { vol: 0.1 }),
+    boot: () => S.tone(660, 0.05, { type: "square", vol: 0.035, to: 990 }),
+    gain: () => { S.tone(N.G5, 0.07, { vol: 0.1 }); S.tone(N.C6, 0.13, { vol: 0.1, at: 0.06 }); },
+    level: () => { run([N.C5, N.E5, N.G5, N.C6], 0.09, { type: "square", vol: 0.06 }); S.tone(N.E5 * 2, 0.5, { vol: 0.11, at: 0.38 }); S.tone(N.C6, 0.5, { vol: 0.09, at: 0.38 }); },
+    stamp: () => { S.noise(0.07, { from: 180, to: 500, vol: 0.2 }); S.tone(120, 0.14, { to: 70, vol: 0.2 }); }
   });
   S.play = function (name) { if (!ctx || muted) return; (FX[name] || FX.pop)(); };
 

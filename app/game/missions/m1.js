@@ -1,7 +1,12 @@
 /* Save Greenline · case 1: The Morning Storm. Bandit: Clutter, who buries the morning under email.
    What it teaches (session 1 of the class): AI is a very fast new hire on day one · the new-hire
    rule (the job, the context, the rules, a good example, a check) · ask "which one is wrong?" ·
-   it drafts, you decide. The showdown is the week's job done by hand: sort an inbox into four piles.
+   it drafts, a person decides. The showdown is the week's job done by hand: sort an inbox into four piles.
+
+   AGENT MODE: the player IS the AI, Greenline's new agent. So every line here is written to the
+   agent ("you") or by the agent ("I"). Sprout is the trainer, the agent who had the job before, and
+   its one wrong shortcut is the thing to catch. The agent never sends: the engine's handoff takes the
+   finished work to Jordan.
 
    THIS IS THE MODEL MISSION. Cases 2 to 8 are written by copying the shape of this file.
    GAME.md explains every field and every kit call used here. Everything in it is made up. */
@@ -73,6 +78,8 @@
 .m1-say{flex:0 0 auto;display:flex;align-items:center;gap:10px;width:min(100%,900px);padding:8px 12px;border:4px solid var(--sg-ink);border-radius:22px;background:#fff;box-shadow:0 6px 0 rgba(43,33,71,.3);font:800 clamp(15px,2.2vmin,18px)/1.3 var(--sg-font)}
 .m1-say.sg-bad{background:#ffe2e2}.m1-say.sg-ok{background:#d9f8e1}
 .m1-say .sg-face{background:#c9f7ee}
+.m1-say.m1-mine{background:#1b1440;color:#eafcff;border-color:#7dfbff}.m1-say.m1-mine.sg-bad{background:#4a1f3d}
+.m1-say.m1-mine .sg-face{background:#fff}
 .m1-cols{flex:0 0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;width:min(100%,900px)}
 .m1-col{display:flex;flex-direction:column;gap:7px;min-height:150px;padding:8px;border:4px solid var(--sg-ink);border-radius:22px;background:#f4f1ff;background:color-mix(in srgb,var(--c) 30%,#fff)}
 .sg .m1-head{position:relative;display:flex;align-items:center;justify-content:center;gap:6px;padding:7px 6px;border:3px solid var(--sg-ink);border-radius:14px;background:var(--c);font:900 15px/1.1 var(--sg-font)}
@@ -129,25 +136,26 @@
       return true;
     }
     const offKeys = kit.keys({ "1": () => send(0), "2": () => send(1), "3": () => send(2), "4": () => send(3) });
-    say("Where does this one go? Drag it, tap a bin, or press 1 to 4.");
+    say("Where do I put this one? Drag it, tap a bin, or press 1 to 4.");
     await new Promise((resolve) => { sorted = resolve; if (emails.length) deal(); else resolve(); });
     offKeys(); clock.stop();
     const took = clock.value(), mine = Math.floor(took / 60) + ":" + String(took % 60).padStart(2, "0");
 
-    // Round 2 · Clutter laughs, and Sprout has a go
+    // Round 2 · Clutter laughs, and Sprout, the trainer, shows its shortcut
     wrap.classList.add("m1-talking");
     kit.cast([{ who: "clutter", side: "left", mood: "glad" }, { who: "sprout", side: "right", mood: "happy" }]);
     await kit.say([
       { who: "clutter", mood: "glad", say: "Hee hee. That took you " + mine + ". I will dump twelve more tomorrow. And the day after!" },
-      { who: "sprout", mood: "glad", pose: "cheer", say: "My turn. I have the job and the rules now. Stand back!" }
+      { who: "sprout", mood: "glad", pose: "cheer", say: "Not bad, {name}. Now watch my shortcut. I did this job in two seconds, every morning." }
     ]);
     kit.hush(); kit.cast([]); clock.hide();
     const face = h("span", { class: "sg-face" }), words = h("span"), note = h("div", { class: "m1-say", role: "status", "aria-live": "polite" }, face, words);
-    const tell = (text, mood, tone) => { words.textContent = text; face.innerHTML = ""; face.appendChild(A.avatar("sprout", { mood: mood })); note.className = "m1-say" + (tone ? " sg-" + tone : ""); kit.fx.pop(note); };
+    /* One line above the board. who: "sprout" speaks it, "agent" is the player's own thought (its own face). */
+    const tell = (text, mood, tone, who) => { words.textContent = text; face.innerHTML = ""; face.appendChild(A.avatar(who || "sprout", { mood: mood })); note.className = "m1-say" + (who === "agent" ? " m1-mine" : "") + (tone ? " sg-" + tone : ""); kit.fx.pop(note); };
     const lists = {}, heads = BINS.map((b, n) => h("button", { class: "m1-head", type: "button", disabled: true }, h("kbd", { "aria-hidden": "true" }, String(n + 1)), A.icon(b.icon), b.label));
     const cols = h("div", { class: "m1-cols" }, BINS.map((b, n) => { lists[b.key] = h("div", { class: "m1-col", style: "--c:" + b.color }, heads[n]); return lists[b.key]; }));
     wrap.className = "m1 m1-board"; wrap.style.setProperty("--storm", "0.25"); wrap.innerHTML = ""; wrap.appendChild(note); wrap.appendChild(cols);
-    tell("Sorting...", "think");
+    tell("Watch and learn. Sorting...", "think");
     const chips = [];
     await new Promise((resolve) => {                   // twelve chips zip into Sprout's four piles
       let n = 0;
@@ -157,15 +165,15 @@
         if (++n >= emails.length) { stop(); kit.after(450, resolve); }
       });
     });
-    tell("Done. You took " + mine + ". I took two seconds. All perfect. Probably.", "proud");
+    tell("Done. You took " + mine + ". My shortcut took two seconds. Copy it. All perfect. Probably.", "proud");
     await kit.wait(1700);
 
     // Round 3 · which one is wrong? Then put it where it belongs.
-    tell("Sprout sounds very sure. One of these is in the wrong pile. Tap it.", "proud");
+    tell("Sprout sounds very sure. I check before I copy. One of these is in the wrong pile. Tap it.", "think", "", "agent");
     let tries = 0;
     const found = await new Promise((resolve) => {
       chips.forEach((c) => { c.el.disabled = false; c.el.onclick = () => {
-        if (c.id !== WRONG) { tries++; kit.score.wrong(); kit.fx.shake(c.el); c.el.disabled = true; c.el.classList.add("sg-okay"); tell("\"" + MAIL[c.id].short + "\" is in the right pile. Look again.", "proud", "bad"); return; }
+        if (c.id !== WRONG) { tries++; kit.score.wrong(); kit.fx.shake(c.el); c.el.disabled = true; c.el.classList.add("sg-okay"); tell("\"" + MAIL[c.id].short + "\" is where I would put it too. I look again.", "think", "bad", "agent"); return; }
         chips.forEach((x) => { x.el.disabled = true; }); c.el.classList.add("sg-found"); kit.score.right();
         kit.score.sprout(tries === 0);                 // the second star: Sprout's slip caught on the first try
         resolve(c);
@@ -182,12 +190,12 @@
       const off = kit.keys({ "1": () => pick(0), "2": () => pick(1), "3": () => pick(2), "4": () => pick(3) });
       kit.focus(heads[0]);
     });
-    tell("Fixed. I will remember that rule tomorrow, if you write it down for me.", "glad", "ok");
+    tell(kit.fill("Fixed. Good catch, {name}. My shortcut skipped the part where somebody checks."), "glad", "ok");
     await kit.wait(1500);
     kit.cast([{ who: "clutter", side: "left", mood: "surprised" }, { who: "sprout", side: "right", mood: "proud", pose: "hips" }]);
     await kit.say([
-      { who: "clutter", mood: "surprised", say: "You CHECKED its work? Nobody checks. That is not fair!" },
-      { who: "sprout", mood: "proud", pose: "cheer", say: "I draft. The detective decides. Get the net!" }
+      { who: "clutter", mood: "surprised", say: "You CHECKED your own trainer? Nobody checks. That is not fair!" },
+      { who: "sprout", mood: "proud", pose: "cheer", say: "You sort. Jordan decides. Take it to Jordan, {name}!" }
     ]);
     done();
   }
@@ -200,7 +208,9 @@
     reward: { hours: 4, leads: 0, money: 0 },          // story numbers: small, whole, and they fit the sample data
     maxWrong: 4,                                       // wrong picks allowed for the third star (the default is 3)
 
-    /* The briefing at Greenline HQ. Each line: who speaks, a mood, an optional pose, and one short sentence or two. */
+    /* The briefing at Greenline HQ. Each line: who speaks, a mood, an optional pose, and one short sentence or two.
+       Jordan and Sprout talk to the agent. {agent} becomes "Agent Ivy" and {name} becomes "Ivy".
+       who: "you" is the agent's own thought, shown as visor text with no actor. */
     briefing: {
       setup: (kit) => {                                // extra art for this scene: Clutter on a cloud, raining envelopes on HQ
         kit.style(CSS);
@@ -209,64 +219,67 @@
         kit.stage.appendChild(sky); kit.stage.appendChild(h("div", { class: "m1-boss" }, stormCloud("glad")));
       },
       lines: [
-        { who: "jordan", mood: "worried", pose: "shrug", say: "Detective! Good, you are here. Look at this place." },
+        { who: "jordan", mood: "worried", pose: "shrug", say: "{agent}! Good, you are online. Look at this place." },
         { who: "jordan", mood: "worried", pose: "point", say: "Clutter hit us overnight. Twelve emails, dumped all over the morning." },
         { who: "jordan", mood: "worried", pose: "idle", say: "One is from Dana. Her crew never showed up. One is a scam. I can't tell which is which from the truck." },
-        { who: "sprout", mood: "glad", pose: "wave", say: "Hi! I'm Sprout. I read fast. Really fast. I also started today." },
-        { who: "jordan", mood: "happy", say: "Sprout is our AI helper. Quick as lightning, and wrong about exactly one thing a day." },
+        { who: "you", say: "Twelve emails. I can read those in a blink. But I do not know this business yet." },
+        { who: "sprout", mood: "glad", pose: "wave", say: "Hi! I'm Sprout. I had your job until today. Now I train you. I know every shortcut." },
+        { who: "jordan", mood: "happy", say: "Sprout is quick as lightning. And one of its shortcuts is wrong, every single day. Catch it." },
         { who: "sprout", mood: "proud", pose: "hips", say: "Only one!" },
-        { who: "jordan", mood: "happy", pose: "point", say: "Three people in town know how to work with a helper like that. Get their clues. Then we stop Clutter." }
+        { who: "jordan", mood: "happy", pose: "point", say: "Three people in town know how to work with an agent like you. Go and learn from them. Then we stop Clutter." }
       ]
     },
 
-    /* Three clue stops. Each: a place, who is there, a few lines, a quick challenge, and the clue it earns.
-       A clue is one real idea from the class, said in a sentence or two. */
+    /* Three stops. Each: a place, who is there, a few lines, a quick challenge, and the knowledge it earns.
+       A piece of knowledge (`clue`) is one real idea from the class, said in a sentence or two, as
+       something the agent now knows about itself. It feeds this week's skill, and it is kept under
+       "What I know" in the Skills panel. */
     stops: [
       { place: "garden", who: "dana",
         lines: [
           { who: "dana", mood: "grumpy", pose: "hips", say: "I took the morning off for a hedge trim. Nobody came. Nobody called." },
-          { who: "sprout", mood: "oops", say: "Your email is under eleven others. Sorry. I can find it in one second." },
-          { who: "dana", mood: "surprised", pose: "idle", say: "One second? My nephew is like that at the garden shop. Fast hands. No idea where anything goes." },
-          { who: "dana", mood: "happy", pose: "point", say: "A fast new hire. Brilliant at some jobs, lost without you at others. See if you can tell which." }
+          { who: "sprout", mood: "oops", say: "Her email is under eleven others, {name}. I never got to it. Sorry, Dana." },
+          { who: "dana", mood: "surprised", pose: "idle", say: "So you are the new agent. My nephew is like you at the garden shop. Fast hands. No idea where anything goes." },
+          { who: "dana", mood: "happy", pose: "point", say: "A fast new hire. Brilliant at some jobs, lost without a person at others. Do you know which is which?" }
         ],
-        challenge: { type: "sort", ask: "Which jobs suit a fast new hire like Sprout?",
-          bins: [{ key: "fast", label: "Sprout is quick at this", icon: "bolt", color: A.C.green }, { key: "you", label: "Sprout needs you for this", icon: "hand", color: A.C.pink }],
+        challenge: { type: "sort", ask: "Which jobs am I quick at, and which do I need a person for?",
+          bins: [{ key: "fast", label: "I am quick at this", icon: "bolt", color: A.C.green }, { key: "you", label: "I need a person for this", icon: "hand", color: A.C.pink }],
           items: [
-            { text: "Reading a big pile, fast", bin: "fast", why: "Reading fast is what it does best." },
-            { text: "Knowing your customers", bin: "you", why: "It only knows what you tell it." },
-            { text: "Sorting and labeling", bin: "fast", why: "Sorting is a fine job to hand over." },
-            { text: "Knowing when it is wrong", bin: "you", why: "It sounds just as sure when it is wrong." },
-            { text: "Writing a first draft", bin: "fast", why: "A first draft, in seconds. You finish it." },
-            { text: "Remembering last week", bin: "you", why: "No notes, no memory. Write it down for it." }
+            { text: "Reading a big pile, fast", bin: "fast", why: "Reading fast is what I do best." },
+            { text: "Knowing Greenline's customers", bin: "you", why: "I only know what somebody tells me." },
+            { text: "Sorting and labeling", bin: "fast", why: "Sorting is a fine job to hand to me." },
+            { text: "Knowing when I am wrong", bin: "you", why: "I sound just as sure when I am wrong." },
+            { text: "Writing a first draft", bin: "fast", why: "A first draft, in seconds. A person finishes it." },
+            { text: "Remembering last week", bin: "you", why: "No notes, no memory. Somebody has to write it down for me." }
           ] },
-        clue: { title: "A fast new hire", text: "AI is a very fast new hire on day one. Great at reading, sorting and first drafts. It knows nothing about your business until you tell it." } },
+        clue: { title: "I am a fast new hire", text: "I am a very fast new hire on day one. Great at reading, sorting and first drafts. I know nothing about a business until a person tells me." } },
 
       { place: "grind", who: "bea",
         lines: [
-          { who: "bea", mood: "glad", pose: "wave", say: "Morning, detective! Cocoa for you, and one drop of oil for the little one." },
+          { who: "bea", mood: "glad", pose: "wave", say: "Morning, {agent}! No cocoa for you, I suppose. One drop of oil, on the house." },
           { who: "bea", mood: "happy", pose: "idle", say: "I train a new hire every summer. I never just say \"help with the coffee.\"" },
           { who: "bea", mood: "proud", pose: "point", say: "I hand over five things. The job. The context. The rules. One good example. And a check." },
-          { who: "sprout", mood: "surprised", say: "Nobody gave me any of those! I got \"help with email.\"" }
+          { who: "sprout", mood: "surprised", say: "Nobody gave me any of those! I got \"help with email.\" So I made up shortcuts." }
         ],
-        challenge: { type: "tap", ask: "Pack Sprout's first-day kit. Tap the five things a new hire needs.",
+        challenge: { type: "tap", ask: "Pack my first-day kit. Tap the five things I need from Jordan.",
           items: [
             { text: "The job, said plainly", ok: true, why: "One task. Not \"help with email.\"" },
             { text: "A pep talk", ok: false, why: "Kind, but it will not sort an inbox." },
-            { text: "The context: your real documents", ok: true, why: "Your price list. Replies you liked." },
-            { text: "The rules: what it must never do", ok: true, why: "Never make up a price. Never promise a date." },
-            { text: "CAPITAL LETTERS, so it listens", ok: false, why: "Shouting does not help a new hire. Or a robot." },
-            { text: "One good example", ok: true, why: "An answer you would be proud to send." },
-            { text: "A check: you read it first", ok: true, why: "Nothing leaves without your eyes on it." },
+            { text: "The context: Greenline's real documents", ok: true, why: "The price list. Replies Jordan liked." },
+            { text: "The rules: what I must never do", ok: true, why: "Never make up a price. Never promise a date." },
+            { text: "CAPITAL LETTERS, so I listen", ok: false, why: "Shouting does not help a new hire. Or an agent." },
+            { text: "One good example", ok: true, why: "An answer Jordan would be proud to send." },
+            { text: "A check: a person reads it first", ok: true, why: "Nothing leaves without a person's eyes on it." },
             { text: "Good luck", ok: false, why: "Luck is not a plan." }
           ] },
-        clue: { title: "The new-hire rule", text: "Hand over five things: the job, the context, the rules, a good example, and a check. A bad answer usually means one is missing." } },
+        clue: { title: "The new-hire rule", text: "I need five things from a person: the job, the context, the rules, a good example, and a check. When my answer is bad, one of them is usually missing." } },
 
       { place: "post", who: "nell",
         lines: [
           { who: "nell", mood: "happy", say: "Sprout sorted my shelves this morning. Two seconds flat. Looked perfect." },
-          { who: "sprout", mood: "proud", pose: "hips", say: "It WAS perfect!" },
-          { who: "nell", mood: "think", say: "It sounded sure. It always sounds sure. So I never ask \"is it right?\"" },
-          { who: "nell", mood: "happy", pose: "point", say: "I ask \"which one is wrong?\" Then I go and look. Your turn." }
+          { who: "sprout", mood: "proud", pose: "hips", say: "It WAS perfect! Learn from the best, {name}." },
+          { who: "nell", mood: "think", say: "It sounded sure. An agent always sounds sure. So I never ask \"is it right?\"" },
+          { who: "nell", mood: "happy", pose: "point", say: "I ask \"which one is wrong?\" Then I go and look. Try it on your trainer." }
         ],
         challenge: { type: "spot", ask: "Sprout sorted the shelves. Which one is wrong? Tap it.", nope: "That one is where it belongs. Keep looking.",
           groups: [
@@ -274,38 +287,50 @@
             { label: "Parcels", color: A.C.orange, items: [{ text: "Shoe box" }, { text: "Box of seeds" }, { text: "Garden gnome" }] },
             { label: "Posters to print", color: A.C.pink, items: [{ text: "Yard sale" }, { text: "Lost cat" }, { text: "Bake sale" }] }
           ] },
-        clue: { title: "Which one is wrong?", text: "AI sounds just as sure when it is wrong. So do not ask \"is it right?\" Ask \"which one is wrong?\" and go look. It drafts. You decide." } }
+        clue: { title: "Which one is wrong?", text: "I sound just as sure when I am wrong. So a person does not ask me \"is it right?\" They ask \"which one is wrong?\" and go look. I draft. They decide." } }
     ],
 
-    /* Crack the case: three cards, exactly one with right: true. A wrong card gets a reaction and another try.
-       art is SVG for a 120 by 120 box (or give icon: "name" instead). */
+    /* The plan: three cards, exactly one with right: true. A wrong card gets a reaction and another try.
+       The cards are the agent's own options, so they say "I". art is SVG for a 120 by 120 box (or give
+       icon: "name" instead); a function, when the picture shows the player's own agent. */
     crack: {
-      lines: [{ who: "sprout", mood: "glad", pose: "cheer", say: "Three clues in the case book. So how do we stop Clutter?" }],
-      ask: "What is the move?",
+      lines: [{ who: "sprout", mood: "glad", pose: "cheer", say: "Three things learned, {name}. So how do we stop Clutter?" }],
+      ask: "What is my plan?",
       cards: [
-        { title: "Read every email yourself", text: "All twelve. Every morning. Forever.", color: A.C.pink,
+        { title: "Jordan reads every email", text: "All twelve. Every morning. Forever. I stay out of it.", color: A.C.pink,
           art: sh.at(44, 80, 1.3, A.prop("envelope")) + sh.at(76, 62, 1.3, A.prop("envelope")) + sh.at(58, 42, 1.3, A.prop("envelope")) + sh.at(70, 70, 0.9, A.iconMarkup("clock")),
           react: { who: "clutter", mood: "glad", say: "Yes, do that! I will bring twelve more tomorrow. Hee hee." } },
-        { title: "Sprout sorts, Sprout sends", text: "Hand over the whole inbox and go fishing.", color: A.C.sun,
-          art: sh.at(6, 4, 0.4, A.characterMarkup("sprout", { mood: "glad", pose: "point" })) + sh.rect(70, 64, 46, 30, 12, A.C.red) + sh.text(93, 85, "SEND", 13, "#fff"),
-          react: { who: "sprout", mood: "oops", say: "I am fast, but I get one thing wrong and I sound sure about it. Please do not let me press send." } },
-        { title: "Sprout sorts, you check", text: "Four piles in seconds. Then you ask which one is wrong.", color: A.C.teal, right: true,
-          art: sh.at(2, 4, 0.4, A.characterMarkup("sprout", { mood: "proud" })) + sh.at(84, 60, 1.1, A.prop("magnifier")),
-          react: { who: "jordan", mood: "glad", say: "That's it. Sprout drafts. You decide. Now go and get Clutter." } }
+        { title: "I sort, and I send", text: "I take the whole inbox. Jordan goes fishing.", color: A.C.sun,
+          art: () => sh.at(6, 4, 0.4, A.characterMarkup("agent", { mood: "glad", pose: "point" })) + sh.rect(70, 64, 46, 30, 12, A.C.red) + sh.text(93, 85, "SEND", 13, "#fff"),
+          react: { who: "sprout", mood: "oops", say: "That was my shortcut. I got one wrong every day, and I sounded sure. Do not press send." } },
+        { title: "I sort. Jordan checks.", text: "Four piles in seconds. Then Jordan asks which one is wrong.", color: A.C.teal, right: true,
+          art: () => sh.at(2, 4, 0.4, A.characterMarkup("agent", { mood: "proud" })) + sh.at(84, 60, 1.1, A.prop("magnifier")),
+          react: { who: "jordan", mood: "glad", say: "That's it. You draft. I decide. Now go and get Clutter." } }
       ]
     },
 
-    /* The showdown: a title, two or three lines of how to play, and the mini-game itself. */
+    /* The showdown: a title, the task line Jordan gives (it shows in the visor), two or three lines of
+       how to play in the agent's own words, and the mini-game itself. */
     showdown: {
       title: "Sort the storm",
-      how: ["Clutter throws twelve emails. Send each one to the right pile.", "Drag it, tap a bin, or press 1, 2, 3 or 4.", "Then Sprout has a go. Check its work."],
+      task: "Sort the twelve emails. Send nothing.",
+      how: ["Clutter throws twelve emails. I put each one in the right pile.", "Drag it, tap a bin, or press 1, 2, 3 or 4.", "Then Sprout shows me its shortcut. I check it before I copy it."],
       play: sortTheStorm
     },
 
-    /* After the catch: two lines. The second is one thing to try for real, tonight. */
+    /* The handoff: the agent never sends. After the showdown the engine takes the work to Jordan.
+       ask: Jordan's line. work: two or three short lines of what the agent did. approve: Jordan's yes. */
+    handoff: {
+      ask: "Twelve emails, {agent}. What have you got for me?",
+      work: ["Twelve emails, sorted into four piles.", "One fix: the overdue invoices are out of FYI.", "Nothing sent. Not one reply."],
+      approve: "Approved. Now I know where to start my morning."
+    },
+
+    /* After the catch: two lines. The second steps out of the story: one thing for the person playing
+       to try for real, tonight. It starts "For the person behind the visor:". */
     debrief: [
       { who: "jordan", mood: "glad", pose: "cheer", say: "Twelve emails, four piles, and nothing sent to anybody. Dana gets a call from me today." },
-      { who: "sprout", mood: "proud", pose: "wave", say: "I drafted. You decided. Tonight, try the same thing on ten of your own emails." }
+      { who: "sprout", mood: "proud", pose: "wave", say: "For the person behind the visor: tonight, sort ten of your own emails this way." }
     ],
     next: "Next case: a new lead came in at 9 PM. Nobody saw it."   // one line; case 8 has none
   });

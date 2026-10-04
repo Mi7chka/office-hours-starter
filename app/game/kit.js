@@ -28,6 +28,11 @@
     const offs = [], keymaps = [], still = calm();
     let dead = false, talk = null, actorsEl = null, bubble = null, actors = {}, layer = null;
     const kit = { stage: stage, h: h, art: A, sound: S, calm: still, mission: hooks.mission || null, week: hooks.week || 0 };
+    /* The player is the agent. kit.agent is who they are: {name, look, level, title}. kit.fill(text)
+       puts the name into a line: "{agent}" becomes "Agent Ivy" and "{name}" becomes "Ivy". */
+    kit.agent = Object.assign({ name: "Agent", look: "", level: 1, title: "" }, hooks.agent ? hooks.agent() : null);
+    kit.fill = (text) => String(text == null ? "" : text).replace(/\{agent\}/g, "Agent " + kit.agent.name).replace(/\{name\}/g, kit.agent.name);
+    const isMe = (who) => who === "you" || who === "me" || who === "agent";   // a line the agent thinks or says itself
     const root = () => stage.closest(".sg") || stage;
     const playing = new WeakMap();                                      // the pop or shake now running on an element (see kit.fx)
     const stopEffect = (el) => { const a = playing.get(el); if (a) { playing.delete(el); try { a.cancel(); } catch (e) { /* already over */ } } };
@@ -218,6 +223,8 @@
     kit.cast = (list) => { talkLayer(); actorsEl.innerHTML = ""; actors = {}; crowd(); [].concat(list || []).forEach((a, i, all) => addActor(typeof a === "string" ? { who: a, side: all.length === 1 ? "center" : i === 0 ? "left" : i === 1 ? "right" : "center" } : a)); return actors; };
     kit.actor = (who, o) => { talkLayer(); return (actors[who] || addActor({ who: who })).set(o); };
     /* Speak the lines one at a time. Each: {who, say, mood, pose}. who: "narrator" has no speaker.
+       who: "you" is the agent itself, the player: no actor (the scene is seen through its eyes), and
+       the bubble turns into the agent's own visor text.
        Text types itself; a tap, Enter or Space finishes the line, then moves on. Returns a Promise. */
     kit.say = (lines) => new Promise((resolve) => {
       lines = [].concat(lines || []).filter((l) => l && l.say);
@@ -227,31 +234,32 @@
       const b = bubble;
       b.el.hidden = false; b.row.innerHTML = ""; b.next.hidden = false; b.skip.hidden = lines.length < 2;
       const speaking = (who, yes) => { Object.keys(actors).forEach((k) => { actors[k].el.classList.toggle("sg-speaking", yes && k === who); actors[k].el.classList.toggle("sg-listening", yes && k !== who); }); };
-      const finish = () => { if (ticker) ticker(); ticker = null; shown = full.length; b.shown.textContent = full; b.rest.textContent = ""; b.el.classList.remove("sg-typing"); const l = lines[i]; if (actors[l.who]) actors[l.who].el.classList.remove("sg-talking"); };
+      const finish = () => { if (ticker) ticker(); ticker = null; shown = full.length; b.shown.textContent = full; b.rest.textContent = ""; b.el.classList.remove("sg-typing"); const l = lines[i]; if (!isMe(l.who) && actors[l.who]) actors[l.who].el.classList.remove("sg-talking"); };
       function show() {
-        const l = lines[i], d = A.cast[l.who];
+        const l = lines[i], me = isMe(l.who), d = me ? null : A.cast[l.who];
         if (d && l.who !== "narrator") { const act = kit.actor(l.who, { mood: l.mood === undefined ? undefined : l.mood, pose: l.pose === undefined ? undefined : l.pose }); act.hop(); act.el.classList.add("sg-talking"); b.el.setAttribute("data-side", act.side); }
         else b.el.setAttribute("data-side", "none");
-        speaking(l.who, !!d);
-        b.tag.textContent = d ? d.name : ""; b.tag.hidden = !d; b.tag.style.background = d ? d.tag : "";
-        b.el.classList.toggle("sg-narration", !d);
-        full = String(l.say); shown = 0; b.shown.textContent = ""; b.rest.textContent = full;
-        b.el.setAttribute("aria-label", (d ? d.name + ": " : "") + full);
+        speaking(me ? "" : l.who, !!d);
+        b.tag.textContent = me ? "Agent " + kit.agent.name + " (me)" : d ? d.name : ""; b.tag.hidden = !d && !me; b.tag.style.background = d ? d.tag : "";
+        b.el.classList.toggle("sg-narration", !d && !me); b.el.classList.toggle("sg-mine", me);
+        full = kit.fill(l.say); shown = 0; b.shown.textContent = ""; b.rest.textContent = full;
+        b.el.setAttribute("aria-label", (me ? "Agent " + kit.agent.name + ": " : d ? d.name + ": " : "") + full);
         kit.fx.pop(b.el); S.play("pop");
         if (still) return finish();
         b.el.classList.add("sg-typing");
         ticker = kit.every(26, () => { shown = Math.min(full.length, shown + 2); b.shown.textContent = full.slice(0, shown); b.rest.textContent = full.slice(shown); if (shown % 6 === 0) S.play("blip"); if (shown >= full.length) finish(); });
       }
-      const end = () => { finish(); off(); b.next.hidden = true; b.skip.hidden = true; b.next.onclick = b.skip.onclick = b.text.onclick = null; speaking("", false); resolve(); };
+      const end = () => { finish(); off(); b.next.hidden = true; b.skip.hidden = true; b.next.onclick = b.skip.onclick = b.text.onclick = null; speaking("", false); b.el.classList.remove("sg-mine"); resolve(); };
       const next = () => { if (ticker) return finish(); if (i >= lines.length - 1) return end(); i++; show(); kit.focus(b.next); };
       const off = kit.keys({ Enter: next, " ": next, ArrowRight: next });
       b.next.onclick = next; b.text.onclick = next; b.skip.onclick = () => { finish(); i = lines.length - 1; show(); finish(); end(); };
       show(); kit.focus(b.next);
     });
-    /* Buttons under the last line: kit.choose([{label: "To the truck!", value: 1, primary: true}]). Resolves with the value. */
+    /* Buttons under the last line: kit.choose([{label: "I'm on it. To the truck!", value: 1, primary: true}]).
+       A choice is the agent's own reply, so write it in the first person. Resolves with the value. */
     kit.choose = (options) => new Promise((resolve) => {
       talkLayer(); bubble.el.hidden = false; bubble.row.innerHTML = "";
-      options.forEach((o, n) => { const btn = h("button", { class: "sg-btn" + (o.primary !== false && n === 0 ? " sg-primary" : ""), type: "button", onclick: () => { S.play("click"); bubble.row.innerHTML = ""; resolve(o.value === undefined ? n : o.value); } }, o.icon ? A.icon(o.icon) : null, o.label); bubble.row.appendChild(btn); if (n === 0) kit.focus(btn); });
+      options.forEach((o, n) => { const btn = h("button", { class: "sg-btn sg-reply" + (o.icon ? " sg-hasicon" : "") + (o.primary !== false && n === 0 ? " sg-primary" : ""), type: "button", onclick: () => { S.play("click"); bubble.row.innerHTML = ""; resolve(o.value === undefined ? n : o.value); } }, o.icon ? A.icon(o.icon) : null, kit.fill(o.label)); bubble.row.appendChild(btn); if (n === 0) kit.focus(btn); });
     });
     kit.hush = () => { if (bubble) bubble.el.hidden = true; };
 
@@ -280,7 +288,7 @@
   /* Each is fn(kit, spec, done). spec.ask is the instruction; spec.who puts a face on the card.
      A wrong pick calls kit.score.wrong(), which is all the scoring a challenge has to do. */
   const C = (G.challenges = {});
-  const head = (kit, spec) => kit.panel({ kicker: spec.kicker || "Quick challenge", title: spec.ask, who: spec.who });
+  const head = (kit, spec) => kit.panel({ kicker: spec.kicker || "My turn", title: kit.fill(spec.ask), who: spec.who });
   const numberKeys = (kit, n, fn) => { const m = {}; for (let i = 0; i < n && i < 9; i++) m[String(i + 1)] = () => fn(i); return kit.keys(m); };
   const keycap = (n) => h("kbd", { "aria-hidden": "true" }, String(n + 1));
 

@@ -8,7 +8,9 @@
      props       A.prop("truck"), "tree", "cloud", "envelope", "net", ...             strings of SVG
      icons       A.icon("envelope")                                                   an <svg> element
      characters  A.character("sprout", {mood, pose})                                  an <svg> element
+     the agent   A.agentLooks, A.setAgent(look, name): the player's own robot, "agent"
      places      A.scene("garden", {gray})   a whole backdrop                         an <svg> element
+     the street  A.street("garden", {gray})  the road to a place, from the truck      an object: {el, move(p)}
      the town    A.townMap("wide" or "tall", {gray, peek})                            an object, see below
 
    One look for everything: a thick dark outline (C.ink), flat bright fills, round corners. */
@@ -139,7 +141,11 @@
     hand: (c) => P("M17,44 Q8,34 10,22 L15,22 L17,28 V10 Q17,6 21,6 Q25,6 25,10 V22 L37,25 Q41,27 40,32 L37,44 Z", c || "#fff", 4),
     keys: () => R(5, 14, 17, 17, 4, "#fff", 4) + R(26, 14, 17, 17, 4, "#fff", 4) + T(13.5, 27, "1", 12) + T(34.5, 27, "2", 12),
     home: (c) => P("M7,24 L24,8 L41,24 V41 H29 V30 H19 V41 H7 Z", c || "#fff", 4),
-    printer: () => R(13, 6, 22, 12, 3, "#fff", 4) + R(6, 17, 36, 17, 5, C.gray, 4) + R(13, 28, 22, 14, 3, "#fff", 4)
+    printer: () => R(13, 6, 22, 12, 3, "#fff", 4) + R(6, 17, 36, 17, 5, C.gray, 4) + R(13, 28, 22, 14, 3, "#fff", 4),
+    skills: (c) => R(6, 26, 10, 16, 3, c || C.green, 4) + R(19, 16, 10, 26, 3, c || C.sun, 4) + R(32, 6, 10, 36, 3, c || C.blue, 4),
+    badge: (c) => R(20, 3, 8, 9, 3, C.gray, 3) + R(8, 10, 32, 34, 6, c || "#fff", 4) + E(24, 23, 6, 6, C.sun, 3) + line("M15,36 H33", C.ink, 3),
+    up: (c) => P("M24,5 L41,24 H31 V43 H17 V24 H7 Z", c || C.green, 4),
+    stamp: (c) => R(18, 5, 12, 20, 5, c || C.red, 4) + R(8, 25, 32, 11, 4, c || C.red, 4) + line("M8,42 H40", C.ink, 5)
   });
   A.iconMarkup = function (name, color) { return (ICONS[name] || ICONS.star)(color); };
   A.icon = function (name, o) { return A.svg(A.iconMarkup(name, o && o.color), { box: "0 0 48 48", class: "sg-icon" + (o && o.class ? " " + o.class : "") }); };
@@ -289,17 +295,25 @@
       : lit("M90,168 Q100,177 110,168", 4), 'class="sg-mouth"');
     return s;
   }
+  /* What stands on a robot's head. Sprout has the leaf; the player's agent has one of the others. */
+  const ANTENNA = {
+    leaf: (trim) => line("M100,106 Q96,92 103,80", C.ink, 9) + line("M100,106 Q96,92 103,80", trim, 4) + leaf(103, 82, 1, -62, C.leaf) + leaf(103, 82, 1.15, 48, C.leaf),
+    bulb: (trim, glow) => line("M100,106 V84", C.ink, 9) + line("M100,106 V84", trim, 4) + E(100, 74, 12, 12, glow, 4) + line("M94,70 Q97,66 101,66", "#fff", 3),
+    bolt: (trim) => line("M100,106 V96", C.ink, 9) + line("M100,106 V96", trim, 4) + P("M106,52 L88,80 H99 L94,98 L114,70 H103 Z", C.sun, 4),
+    dish: (trim, glow) => line("M100,106 V92", C.ink, 9) + line("M100,106 V92", trim, 4) + P("M76,78 Q100,106 124,78 Z", trim, 4) + line("M100,84 V68", C.ink, 4) + E(100, 64, 6, 6, glow, 3),
+    twin: (trim, glow) => line("M80,108 Q74,92 66,82", C.ink, 9) + line("M80,108 Q74,92 66,82", trim, 4) + line("M120,108 Q126,92 134,82", C.ink, 9) + line("M120,108 Q126,92 134,82", trim, 4) + E(65, 80, 8, 8, glow, 4) + E(135, 80, 8, 8, glow, 4)
+  };
   function robot(d, o) {
     const m = MOODS[o.mood] || MOODS.happy, arms = RARMS[o.pose] || RARMS.idle;
-    const body = d.body || "#f6fffa", trim = d.trim || C.green, glow = d.glow || "#7dfbff";
+    const body = d.body || "#f6fffa", trim = d.trim || C.green, glow = d.glow || "#7dfbff", boxy = d.headShape === "square";
     const arm = (a) => tube(a[0], body, 11) + E(a[1], a[2], 10, 10, trim, 4);
     let s = E(100, 270, 46, 8, "rgba(43,33,71,.18)", 0);
     s += R(72, 244, 56, 22, 11, "#4a4466") + E(86, 255, 5, 5, "#cfcbe0", 0) + E(114, 255, 5, 5, "#cfcbe0", 0);
     s += G(arm(arms.l));
-    s += R(66, 190, 68, 60, 24, body) + E(100, 222, 12, 12, trim, 4) + leaf(100, 230, 0.48, 0, "#fff", 2.5);
-    s += R(34, 142, 14, 26, 6, trim) + R(152, 142, 14, 26, 6, trim) + R(42, 106, 116, 92, 36, body) + R(56, 121, 88, 64, 26, "#1d2a55", 4);
+    s += R(66, 190, 68, 60, 24, body) + E(100, 222, 12, 12, trim, 4) + (d.chest === "star" ? P(starPath(100, 222, 7), "#fff", 2) : leaf(100, 230, 0.48, 0, "#fff", 2.5));
+    s += R(34, 142, 14, 26, 6, trim) + R(152, 142, 14, 26, 6, trim) + R(42, 106, 116, 92, boxy ? 18 : 36, body) + R(56, 121, 88, 64, boxy ? 12 : 26, "#1d2a55", 4);
     s += robotFace(m, glow) + E(64, 190, 7, 4, "rgba(255,127,193,.55)", 0) + E(136, 190, 7, 4, "rgba(255,127,193,.55)", 0);
-    s += G(line("M100,106 Q96,92 103,80", C.ink, 9) + line("M100,106 Q96,92 103,80", trim, 4) + leaf(103, 82, 1, -62, C.leaf) + leaf(103, 82, 1.15, 48, C.leaf), 'class="sg-antenna" style="transform-origin:100px 106px"');
+    s += G((ANTENNA[d.antenna] || ANTENNA.leaf)(trim, glow), 'class="sg-antenna" style="transform-origin:100px 106px"');
     s += G(arm(arms.r), arms.wave ? 'class="sg-wave" style="transform-origin:132px 208px"' : "");
     if (m.sweat) s += sweat(166, 100);
     if (m.sparkle) s += sparkle(172, 100) + sparkle(30, 118, 0.7);
@@ -384,8 +398,24 @@
   A.addCharacter("nell", { name: "Nell", role: "Print and Post", tag: C.blue, skin: SKIN.light, hair: "#a9a6c2", hairStyle: "bun", top: C.blue, outfit: "apron", trim: "#fff", glasses: true });
   A.addCharacter("penny", { name: "Penny", role: "Cedar Hollow Savings", tag: C.teal, skin: SKIN.brown, hair: "#1f1a17", hairStyle: "tail", top: C.teal, pants: "#3b4a7a", outfit: "suit", trim: C.sun, glasses: true });
   A.addCharacter("gus", { name: "Gus", role: "The Workshop", tag: C.red, skin: SKIN.light, hair: "#c0621f", hairStyle: "sides", beard: true, top: C.sun, outfit: "overalls", trim: C.blue });
-  A.addCharacter("detective", { name: "You", role: "Greenline's office detective", tag: C.sun, skin: SKIN.tan, hair: "#3a2a22", top: "#d9a441", pants: "#5b4a8f", outfit: "coat", hat: "fedora", hatColor: "#8a5a3c", holds: "magnifier" });
-  A.addCharacter("sprout", { kind: "robot", name: "Sprout", role: "Your helper robot. The AI.", tag: C.teal });
+  A.addCharacter("sprout", { kind: "robot", name: "Sprout", role: "Your trainer. The agent who had this job before you.", tag: C.teal });
+
+  /* The player is an AI agent, and picks one of these looks at the login. A.setAgent(look, name) makes
+     it the character "agent": the face on the badge, in the HUD and in the Skills panel. The agent is
+     never an actor in a scene: every scene is seen through its eyes. */
+  A.agentLooks = [
+    { key: "sky", label: "Sky", body: "#eef6ff", trim: C.blue, glow: "#7dfbff", antenna: "bulb", headShape: "round" },
+    { key: "sunny", label: "Sunny", body: "#fff7d9", trim: C.orange, glow: "#ffe873", antenna: "bolt", headShape: "square" },
+    { key: "berry", label: "Berry", body: "#f8eeff", trim: C.purple, glow: "#ffb3ec", antenna: "dish", headShape: "round" },
+    { key: "rosy", label: "Rosy", body: "#fff0f5", trim: C.pink, glow: "#ffd3e8", antenna: "twin", headShape: "square" }
+  ];
+  A.agentLooks.forEach((l) => A.addCharacter("agent-" + l.key, { kind: "robot", name: l.label, role: "A look for your agent", tag: l.trim, body: l.body, trim: l.trim, glow: l.glow, antenna: l.antenna, headShape: l.headShape, chest: "star" }));
+  A.setAgent = function (look, name) {
+    const d = CAST["agent-" + look] || CAST["agent-" + A.agentLooks[0].key];
+    CAST.agent = Object.assign({}, d, { name: name || "Agent", role: "You. Greenline's new AI agent." });
+    return CAST.agent;
+  };
+  A.setAgent(A.agentLooks[0].key, "Agent");
 
   // the Busywork Bandits, in mission order
   const env = (x, y, r, s) => G(PROPS.envelope(), 'transform="translate(' + x + "," + y + ") rotate(" + r + ") scale(" + (s || 0.7) + ')"');
@@ -483,6 +513,54 @@
       at(268, 438, 0.5, PLACES.grind.building()) + at(532, 438, 0.5, PLACES.garden.building()) + at(400, 438, 0.62, PLACES.hq.building()) +
       R(-20, 486, 840, 74, 0, C.road, 0) + line("M-20,486 H820 M-20,560 H820", C.ink, 5) + '<path d="M-20,523 H820" stroke="' + C.roadLine + '" stroke-width="6" stroke-dasharray="34 26" fill="none"/>',
       { box: "0 0 800 600", fit: "xMidYMax slice", class: "sg-scene" });
+  };
+
+  // ── the street, seen from the truck: how the agent travels from place to place ──
+  /* A.street("garden", {gray}) returns {el, move(p)}. p runs from 0 (setting off) to 1 (there): the
+     road rolls toward the camera, the trees go by, and the place grows at the end of the road.
+     Everything is placed by its depth d: a thing on the ground sits at y = HY + K / d and is drawn
+     at a size of 1 / d, so it grows as it comes closer. */
+  A.street = function (key, o) {
+    o = o || {};
+    const d = PLACES[key] || PLACES.hq, HY = 300, K = 250, CX = 400, FAR = 13.4, NEAR = 2.4, SPAN = 13.2;
+    const sides = ["tree", "lamp", "pine", "bush", "tree", "pine"];
+    let s = R(-20, -20, 840, 640, 0, "url(#sg-sky)", 0) + at(650, 120, 0.8, PROPS.sun()) +
+      G(at(150, 110, 1, PROPS.cloud()), 'class="sg-drift"') + G(at(520, 70, 0.7, PROPS.cloud()), 'class="sg-drift sg-drift-b"') +
+      P("M-20,306 Q90,216 250,272 T520,258 T820,250 V320 H-20 Z", C.hillFar) + P("M-20,312 Q160,262 330,292 T640,280 T820,292 V330 H-20 Z", C.hill) +
+      R(-20, HY, 840, 340, 0, C.grass, 0) + line("M-20," + HY + " H820", C.ink, 5) +
+      P("M" + CX + "," + HY + " L70,620 H730 Z", C.road) + '<g class="sg-st-dashes"></g>' +
+      G(d.building(), 'class="sg-st-place"' + (o.gray ? ' filter="url(#sg-gray)"' : "")) + '<g class="sg-st-sides"></g>';
+    /* the truck, from the passenger seat: the hood, the dashboard, and Luis's hands on the wheel */
+    s += G(P("M-40,640 V566 Q130,500 400,496 Q670,500 840,566 V640 Z", C.green) + line("M120,548 Q400,512 680,548", light(C.green, 0.3), 6) + leaf(400, 540, 1.1, 0, C.leaf, 4) +
+      R(-40, 574, 880, 70, 0, "#3a3350") + line("M-40,574 H840", C.ink, 5) + R(338, 584, 124, 12, 6, "#5b5475", 3) +
+      '<ellipse cx="196" cy="612" rx="84" ry="62" fill="none" stroke="' + C.ink + '" stroke-width="22"/><ellipse cx="196" cy="612" rx="84" ry="62" fill="none" stroke="#5b5475" stroke-width="12"/>' +
+      tube("M96,640 Q104,606 128,584", C.orange, 17) + E(130, 580, 14, 14, SKIN.tan, 4) + tube("M300,640 Q292,606 266,584", C.orange, 17) + E(264, 580, 14, 14, SKIN.tan, 4), 'class="sg-idle"');
+    const el = A.svg(s, { box: "0 0 800 600", fit: "xMidYMax slice", class: "sg-scene sg-street" });
+    const dashes = el.querySelector(".sg-st-dashes"), place = el.querySelector(".sg-st-place"), side = el.querySelector(".sg-st-sides");
+    const items = sides.map((name, j) => { const g = document.createElementNS(NS, "g"); g.innerHTML = PROPS[name](); side.appendChild(g); return { el: g, j: j, x: (j % 2 ? 1 : -1) * 470, d: 0 }; });
+    let order = "";
+    const X = (x, dd) => (CX + x / dd).toFixed(1), Y = (dd) => (HY + K / dd).toFixed(1);
+    function move(p) {
+      const t = Math.max(0, Math.min(1, p)) * (FAR - NEAR), D = FAR - t;
+      place.setAttribute("transform", "translate(" + CX + "," + Y(D) + ") scale(" + (3.6 / D).toFixed(3) + ")");
+      let q = "";
+      for (let j = 0; j < 8; j++) {
+        const a = Math.max(0.8, j * 2 + 1 - (t % 2)), b = Math.min(j * 2 + 1.9 - (t % 2), D - 0.2);
+        if (b > a) q += '<path d="M' + X(-9, a) + "," + Y(a) + " L" + X(9, a) + "," + Y(a) + " L" + X(9, b) + "," + Y(b) + " L" + X(-9, b) + "," + Y(b) + ' Z" fill="' + C.roadLine + '"/>';
+      }
+      dashes.innerHTML = q;
+      items.forEach((it) => {
+        it.d = ((it.j * 2.2 + 1.3 - t) % SPAN + SPAN) % SPAN + 0.7;
+        if (it.d > D - 0.4) { it.el.setAttribute("display", "none"); return; }
+        it.el.removeAttribute("display");
+        it.el.setAttribute("transform", "translate(" + X(it.x, it.d) + "," + Y(it.d) + ") scale(" + (1.9 / it.d).toFixed(3) + ")");
+      });
+      const now = items.slice().sort((a, b) => b.d - a.d);                  // the nearest thing is drawn last, on top
+      const key2 = now.map((it) => it.j).join("");
+      if (key2 !== order) { order = key2; now.forEach((it) => side.appendChild(it.el)); }
+    }
+    move(0);
+    return { el: el, move: move };
   };
 
   // ── the town map ──

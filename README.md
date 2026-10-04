@@ -17,11 +17,14 @@ browser on your own computer.
 
 ## Play it as a game: Save Greenline
 
-Press **Play** at the top of the app. Eight goofy bandits are stealing time from Greenline
-Landscaping. You drive the little green truck around town, collect clues, and catch each bandit in
-a hands-on mini-game, with your helper robot Sprout, who is fast, keen, and wrong about one thing
-in every case. Cases unlock in order and a new one arrives every Wednesday. The game is optional:
-the class and the tools work without it.
+Press **Play** at the top of the app, and log in as Greenline Landscaping's new AI agent: a made-up
+name and a look, no password. You play in the first person, as the AI. Eight goofy bandits are
+stealing the company's time. You ride around town in the little green truck, learn one thing at
+each stop, and do that week's job in a hands-on mini-game. Sprout, the agent who had the job before
+you, trains you, and one of its shortcuts is wrong in every case, which is yours to catch. You never
+send anything yourself: the owner approves your work. Every thing you learn feeds a skill, and
+skills add up to levels. Cases unlock in order and a new one arrives every Wednesday. The game is
+optional: the class and the tools work without it.
 
 ## What is in it so far
 
